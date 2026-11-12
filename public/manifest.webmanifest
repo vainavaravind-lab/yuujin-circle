@@ -1,0 +1,16 @@
+{
+  "name": "Yuujin Circle · SNUC",
+  "short_name": "Yuujin",
+  "description": "The SNU Chennai campus dating app — verified @snuchennai.edu.in students only.",
+  "start_url": "/meet",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0b161f",
+  "theme_color": "#0b161f",
+  "icons": [
+    { "src": "/pwa-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "/pwa-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "/pwa-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}

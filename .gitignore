@@ -1,0 +1,36 @@
+# deps
+node_modules
+
+# build
+dist
+dist-ssr
+
+# env secrets (never commit)
+.env
+.env.local
+.env.*.local
+
+# logs
+*.log
+npm-debug.log*
+
+# tooling and scratch (not app code)
+.agents
+.freebuff
+.taste-skill
+skills-lock.json
+*.tsbuildinfo
+
+# saved dashboard pages
+Untitled query*
+
+# editor
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
