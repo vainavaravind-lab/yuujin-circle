@@ -32,6 +32,7 @@ import {
   todayISO,
 } from '../lib/gamification';
 import { SparkMeter } from '../components/SparkMeter';
+import { GlassDice } from '../components/GlassDice';
 import { ProfilePhoto } from '../components/ProfilePhoto';
 import { COLLEGE_DOMAIN } from '../lib/constants';
 
@@ -322,16 +323,18 @@ export default function Meet() {
                 ))}
               </ul>
 
-              <div className="mt-6 flex flex-wrap items-center gap-3">
-                <Link to={`/chat/${pairing.match.id}`} className="btn-primary">
-                  Open the chat <ArrowRight size={15} />
-                </Link>
-                <span className="label">
-                  {stage >= 4
-                    ? 'Match or Pass is open'
-                    : `${STAGE_THRESHOLDS[4] - pairing.count} more to decide`}
+              <Link to={`/chat/${pairing.match.id}`} className="glass-chat mt-6">
+                <GlassDice />
+                <span className="glass-chat-copy">
+                  <span className="glass-chat-title">Open the chat</span>
+                  <span className="glass-chat-detail">
+                    {stage >= 5
+                      ? 'Match or Pass is open'
+                      : `${STAGE_THRESHOLDS[4] - pairing.count} more messages to decide`}
+                  </span>
                 </span>
-              </div>
+                <span className="glass-chat-arrow"><ArrowRight size={20} /></span>
+              </Link>
             </div>
           </motion.section>
         ) : (
@@ -463,4 +466,3 @@ export default function Meet() {
     </div>
   );
 }
-

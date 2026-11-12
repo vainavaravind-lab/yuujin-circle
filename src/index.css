@@ -766,3 +766,81 @@
   .poster-chat, .poster-orbit, .reveal-card { animation: none; transform: none !important; }
 }
 
+
+/* A glass invitation with suspended, solid CSS dice. */
+.glass-chat {
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  min-height: 144px;
+  padding: 1.25rem 1.5rem 1.25rem 0.5rem;
+  border: 1px solid #ffffff38;
+  border-radius: 28px;
+  color: #fff8ee;
+  background: linear-gradient(115deg, #c0afe52e, #b8c8c414 55%, #dce4ac1f), #292337;
+  box-shadow: inset 0 1px 0 #ffffff60, inset 0 -1px 0 #ffffff12, 0 16px 32px -22px #000;
+  text-decoration: none;
+  transition: border-color .3s, box-shadow .3s, transform .3s;
+}
+@supports (backdrop-filter: blur(20px)) {
+  .glass-chat { background-color: #ffffff07; backdrop-filter: blur(20px) saturate(150%); }
+}
+.glass-chat::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  z-index: -1;
+  background: radial-gradient(ellipse at 15% 75%, #c4b1fc38, transparent 45%),
+    linear-gradient(155deg, #ffffff18, transparent 42%, #ffffff08 70%, transparent);
+  pointer-events: none;
+}
+.glass-chat:hover { border-color: #ffffff75; box-shadow: inset 0 1px 0 #ffffff8c, 0 18px 40px -18px #0008; }
+.glass-chat:focus-visible { outline: 3px solid var(--color-teal-brand); outline-offset: 5px; }
+.glass-chat:active { transform: scale(.985); }
+.glass-chat-copy { display: grid; gap: .35rem; min-width: 0; }
+.glass-chat-title { font-family: var(--font-display); font-size: clamp(1.7rem, 3vw, 2.4rem); line-height: 1.05; }
+.glass-chat-detail { font-size: .75rem; color: #d0c5db; line-height: 1.5; }
+.glass-chat-arrow {
+  display: grid; place-items: center; flex-shrink: 0; margin-left: auto;
+  width: 40px; height: 40px; border-radius: 50%; border: 1px solid #ffffff36;
+  background: linear-gradient(145deg, #ffffff20, #ffffff05); box-shadow: inset 0 1px 0 #ffffff36;
+  transition: transform .3s, background .3s;
+}
+.glass-chat:hover .glass-chat-arrow { transform: translateX(3px); background-color: #ffffff15; }
+.glass-dice { position: relative; flex: 0 0 128px; height: 105px; perspective: 600px; }
+.glass-die-float { position: absolute; width: 45px; height: 45px; transform-style: preserve-3d; animation: dice-drift 6s ease-in-out infinite; }
+.glass-die-float--0 { left: 25px; top: 19px; }
+.glass-die-float--1 { left: 72px; top: 49px; animation-delay: -3s; --die-fill: #c2cb9bcf; --die-pip: #33412d; }
+.glass-die { position: relative; display: block; width: 100%; height: 100%; transform-style: preserve-3d; transform: rotateX(-24deg) rotateY(-32deg) rotateZ(-12deg); transition: transform .65s cubic-bezier(.2,.7,.2,1); }
+.glass-die-float--1 .glass-die { transform: rotateX(-25deg) rotateY(30deg) rotateZ(18deg); }
+.glass-chat:hover .glass-die-float--0 .glass-die { transform: rotateX(-34deg) rotateY(-48deg) rotateZ(-5deg); }
+.glass-chat:hover .glass-die-float--1 .glass-die { transform: rotateX(-15deg) rotateY(45deg) rotateZ(8deg); }
+.glass-die-face {
+  position: absolute; inset: 0; display: grid; grid-template: repeat(3, 1fr) / repeat(3, 1fr);
+  padding: 9px; gap: 3px; border: 1px solid #ffffffaa; border-radius: 9px;
+  background: linear-gradient(135deg, #ffffff83, #ffffff05 65%), var(--die-fill, #c1afe8d9);
+  box-shadow: inset 0 0 5px #ffffff75; backface-visibility: hidden;
+}
+.glass-die-pip { border-radius: 50%; background: var(--die-pip, #493956); box-shadow: inset 0 1px 2px #0008, 0 1px 0 #ffffff9c; }
+.glass-die-face--front { transform: translateZ(22.5px); }
+.glass-die-face--back { transform: rotateY(180deg) translateZ(22.5px); }
+.glass-die-face--right { transform: rotateY(90deg) translateZ(22.5px); }
+.glass-die-face--left { transform: rotateY(-90deg) translateZ(22.5px); }
+.glass-die-face--top { transform: rotateX(90deg) translateZ(22.5px); }
+.glass-die-face--bottom { transform: rotateX(-90deg) translateZ(22.5px); }
+@keyframes dice-drift { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-9px); } }
+@media (max-width: 420px) {
+  .glass-chat { gap: .6rem; padding: 1rem .9rem 1rem 0; min-height: 132px; border-radius: 23px; }
+  .glass-dice { flex-basis: 105px; transform: scale(.78); transform-origin: center; }
+  .glass-die-float--0 { left: 10px; }
+  .glass-die-float--1 { left: 55px; }
+  .glass-chat-arrow { width: 30px; height: 30px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .glass-die-float { animation: none; }
+  .glass-chat, .glass-die, .glass-chat-arrow { transition: none; }
+  .glass-chat:hover .glass-die, .glass-chat:active, .glass-chat:hover .glass-chat-arrow { transform: none; }
+}
