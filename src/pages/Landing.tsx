@@ -1,5 +1,5 @@
 import { useRef, useState, type FormEvent } from 'react';
-import { motion, useReducedMotion, useScroll, useTransform } from 'framer-motion';
+import { CHAT_STEPS, ScrollChat } from '../components/ScrollChat';
 import { ArrowRight, Mail, ShieldCheck, Zap } from 'lucide-react';
 import { supabase, isSupabaseConfigured } from '../lib/supabase';
 import { COLLEGE_DOMAIN } from '../lib/constants';
@@ -43,73 +43,9 @@ function Wrap({ children, className = '' }: { children: React.ReactNode; classNa
   );
 }
 
-/** The product's own screen, drawn from the same tokens the app uses. */
-function ChatMock() {
-  return (
-    <div className="border border-white/10 bg-cream-100" data-ui>
-      <div className="flex items-center gap-3 border-b border-white/[0.08] px-5 py-4">
-        <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-white/12 text-ink-faint">
-          <span className="font-mono text-[11px]">?​</span>
-        </span>
-        <div className="min-w-0 flex-1">
-          <p className="text-[13px] font-semibold text-ink">Mystery classmate</p>
-          <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-ink-faint">
-            stage 2 of 5 · name locked
-          </p>
-        </div>
-        <span className="label !text-teal-deep">SNU</span>
-      </div>
-
-      <div className="space-y-2 px-5 py-5">
-        <p className="w-fit max-w-[86%] border border-white/10 bg-cream px-3.5 py-2 text-[13px] leading-[1.5] text-ink" style={{ borderRadius: 12, borderBottomLeftRadius: 3 }}>
-          Triangles, circles or squares?
-        </p>
-        <p className="ml-auto w-fit max-w-[86%] bg-teal-brand px-3.5 py-2 text-[13px] leading-[1.5] text-cream" style={{ borderRadius: 12, borderBottomRightRadius: 3 }}>
-          Squares. Triangles are for people with opinions.
-        </p>
-        <p className="w-fit max-w-[86%] border border-white/10 bg-cream px-3.5 py-2 text-[13px] leading-[1.5] text-ink" style={{ borderRadius: 12, borderBottomLeftRadius: 3 }}>
-          Wrong answer, but I respect it.
-        </p>
-      </div>
-
-      <div className="border-t border-white/[0.08] px-5 py-4">
-        <div className="flex items-center justify-between">
-          <span className="label">spark meter</span>
-          <span className="label">12 / 38</span>
-        </div>
-        <div className="relative mt-2.5 h-[3px] w-full bg-white/[0.12]">
-          <span className="absolute inset-y-0 left-0 bg-teal-brand" style={{ width: '31%' }} />
-          {[8, 21, 42, 68].map((p) => (
-            <span key={p} className="absolute top-1/2 h-[7px] w-px -translate-y-1/2 bg-white/25" style={{ left: `${p}%` }} />
-          ))}
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function PairingPoster() {
-  const poster = useRef<HTMLDivElement>(null);
-  const reduceMotion = useReducedMotion();
-  const { scrollYProgress } = useScroll({ target: poster, offset: ['start 20%', 'end start'] });
-  const rotateX = useTransform(scrollYProgress, [0, 1], [10, -22]);
-  const rotateY = useTransform(scrollYProgress, [0, 1], [-13, 17]);
-  const lift = useTransform(scrollYProgress, [0, 1], [0, -56]);
-  const orbit = useTransform(scrollYProgress, [0, 1], [-26, 23]);
-
-  return (
-    <div ref={poster} className="pairing-poster" aria-hidden="true">
-      <motion.div className="poster-orbit" style={reduceMotion ? undefined : { rotate: orbit }} />
-      <div className="poster-print">yc.</div>
-      <motion.div className="poster-chat" style={reduceMotion ? undefined : { rotateX, rotateY, y: lift }}>
-        <ChatMock />
-      </motion.div>
-    </div>
-  );
-}
-
 export default function Landing() {
   const { toast } = useToast();
+  const story = useRef<HTMLDivElement>(null);
   const [email, setEmail] = useState('');
   const [sending, setSending] = useState(false);
   const [sent, setSent] = useState(false);
@@ -220,91 +156,15 @@ export default function Landing() {
                 )}
               </div>
             </div>
-            <PairingPoster />
-          </Wrap>
-        </section>
-
-        {/* ---------------- the pinned scene: anonymity resolving ---------------- */}
-        <section className="scene border-y border-white/[0.08] bg-cream-100">
-          <Wrap className="grid gap-10 py-20 sm:py-24 lg:min-h-[150vh] lg:grid-cols-12 lg:items-start lg:gap-8">
-            <div className="lg:col-span-5">
-              <h2 className="display-2 max-w-[16ch]">A little more with each message.</h2>
-              <p className="lead mt-5 max-w-[40ch]">
-                The meter is the whole idea. A face, a name and a course are things you get to, not
-                things you open with.
-              </p>
-              <p className="mt-8 max-w-[42ch] text-[15px] leading-[1.65] text-ink-soft">
-                There is no grid to swipe through, no photo to rank, and no one watching who you
-                skipped. A pairing is two people and a countdown neither of them can see from the
-                other side.
-              </p>
-              <ol className="mt-10 space-y-4 border-t border-white/[0.08] pt-6">
-                {[
-                  ['3', 'interests'],
-                  ['8', 'profile photo, if added'],
-                  ['16', 'name'],
-                  ['26', 'course'],
-                  ['38', 'match or pass'],
-                ].map(([n, what]) => (
-                  <li key={n} className="flex items-baseline gap-4">
-                    <span className="w-8 shrink-0 font-mono text-[12px] tabular-nums text-teal-deep">
-                      {n}
-                    </span>
-                    <span className="text-[15px] text-ink-soft">{what}</span>
-                  </li>
-                ))}
-              </ol>
-
-              <div className="mt-24 hidden space-y-10 border-t border-white/[0.08] pt-8 lg:block">
-                {[
-                  ['No grid, no ranking', 'Nobody is shown a queue of faces, and nobody knows who was passed over. A draw is one spark, one person, one chat.'],
-                  ['The reveal is earned', 'Interests open first. A photo follows at eight messages if your classmate added one.'],
-                  ['It ends in daylight', 'At the last message you both answer privately. Two yeses keep the chat; anything else closes without a notification.'],
-                ].map(([title, body]) => (
-                  <div key={title} className="rise">
-                    <p className="display-3 text-ink">{title}</p>
-                    <p className="mt-2 max-w-[40ch] text-[15px] leading-[1.65] text-ink-soft">{body}</p>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* pinned: the name plate unblurs while the scene is held */}
-            <div className="lg:sticky lg:top-[calc(var(--nav)+3.5rem)] lg:col-span-6 lg:col-start-7 lg:self-start">
-              <div>
-                <div className="reveal-card border border-white/10 bg-cream p-7 sm:p-9">
-                  <div className="relative h-[86px]">
-                    <p className="scene-fade-out display-2 absolute inset-x-0 top-0 text-ink-soft">
-                      Mystery classmate
-                    </p>
-                    <p className="scene-unblur display-2 absolute inset-x-0 top-0 text-ink">
-                      Meera, 3rd year ECE
-                    </p>
-                  </div>
-
-                  <p className="mt-2 text-[14px] text-ink-soft">
-                    Second in the class. Argues about filter coffee.
-                  </p>
-
-                  <div className="mt-8">
-                    <div className="flex items-baseline justify-between">
-                      <span className="label">spark meter</span>
-                      <span className="label">38 / 38</span>
-                    </div>
-                    <div className="relative mt-2.5 h-[3px] bg-white/[0.12]">
-                      <span className="scene-progress absolute inset-y-0 left-0 block w-full origin-left bg-teal-brand" />
-                    </div>
-                    <ul className="mt-4 grid grid-cols-5 gap-1.5">
-                      {['interests', 'photo', 'name', 'course', 'decide'].map((t) => (
-                        <li key={t} className="label !tracking-[0.08em]">
-                          {t}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                </div>
-                <p className="label mt-3">stage five · both of you answer privately</p>
-              </div>
+            <ScrollChat story={story} />
+            <div ref={story} className="scroll-chat-story">
+              {CHAT_STEPS.map((step, index) => (
+                <section key={step.title} className="scroll-chat-chapter">
+                  <p className="label">{index >= 6 ? 'Daily streak' : step.count + ' messages'}</p>
+                  <h2 className="display-2">{step.title}</h2>
+                  <p>{step.detail}</p>
+                </section>
+              ))}
             </div>
           </Wrap>
         </section>
@@ -425,4 +285,3 @@ export default function Landing() {
     </>
   );
 }
-
