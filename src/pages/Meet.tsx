@@ -16,7 +16,7 @@ import confetti from 'canvas-confetti';
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../contexts/AuthContext';
 import { useToast } from '../contexts/ToastContext';
-import type { Match, PromptAnswer } from '../lib/database.types';
+import type { Match } from '../lib/database.types';
 import {
   QUESTS,
   SPARK_MAX,
@@ -32,6 +32,7 @@ import {
   todayISO,
 } from '../lib/gamification';
 import { SparkMeter } from '../components/SparkMeter';
+import { ProfilePhoto } from '../components/ProfilePhoto';
 import { COLLEGE_DOMAIN } from '../lib/constants';
 
 const SAFETY = [
@@ -47,7 +48,7 @@ type OtherProfile = {
   department: string;
   year: number | null;
   interests: string[];
-  prompts: PromptAnswer[];
+  profile_photo_path: string | null;
 };
 
 type Pairing = {
@@ -64,7 +65,7 @@ function revealsFor(pairing: Pairing) {
 
   return [
     { label: 'Interests', value: other?.interests?.slice(0, 4).join(' · ') ?? '—' },
-    { label: 'One written answer', value: other?.prompts?.[0]?.answer ?? '—' },
+    { label: 'Profile photo', value: other?.profile_photo_path ? 'Revealed' : 'No photo added' },
     { label: 'Name', value: first },
     {
       label: 'Course and year',
@@ -126,7 +127,7 @@ export default function Meet() {
           .eq('match_id', match.id),
         supabase
           .from('profiles')
-          .select('id, full_name, department, year, interests, prompts')
+          .select('id, full_name, department, year, interests, profile_photo_path')
           .eq('id', otherId)
           .maybeSingle(),
       ]);
@@ -281,6 +282,8 @@ export default function Meet() {
             className="card mt-8 overflow-hidden"
           >
             <div className="border-b border-white/[0.08] p-6">
+              <ProfilePhoto path={stage >= 2 ? pairing.other?.profile_photo_path : null}
+                className="float-right ml-3 size-16" />
               <span className="label flex items-center gap-1.5 text-rose-soft">
                 <Flame size={12} className="text-rose-brand" /> open pairing
               </span>
@@ -460,3 +463,4 @@ export default function Meet() {
     </div>
   );
 }
+

@@ -36,7 +36,24 @@ Deno.serve(async (req) => {
       });
     }
 
-    const { error: deleteError } = await supabaseAdmin.auth.admin.deleteUser(userData.user.id);
+    const caller = createClient(
+      Deno.env.get('SUPABASE_URL') ?? '',
+      Deno.env.get('SUPABASE_ANON_KEY') ?? '',
+      { global: { headers: { Authorization: authHeader } } }
+    );
+    const avatars = caller.storage.from('profile-avatars');
+    const userId = userData.user.id;
+    // Storage objects must be removed before deleting their owner.
+    while (true) {
+      const { data: photos, error: listError } = await avatars.list(userId, { limit: 100 });
+      if (listError) throw listError;
+      if (!photos.length) break;
+      const { data: removed, error: removeError } = await avatars.remove(photos.map((photo) => `${userId}/${photo.name}`));
+      if (removeError) throw removeError;
+      if (!removed.length) throw new Error('Could not remove profile photos');
+    }
+
+    const { error: deleteError } = await supabaseAdmin.auth.admin.deleteUser(userId);
     if (deleteError) {
       return new Response(JSON.stringify({ error: deleteError.message }), {
         status: 500,
@@ -55,3 +72,4 @@ Deno.serve(async (req) => {
     });
   }
 });
+

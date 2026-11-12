@@ -16,7 +16,7 @@ import { useToast } from '../contexts/ToastContext';
 import { supabase } from '../lib/supabase';
 import { COLLEGE_DOMAIN } from '../lib/constants';
 import { deptYear, fullName, initialsOf, lookingForLabel } from '../lib/profile';
-import { Avatar } from '../components/CartoonAvatar';
+import { ProfilePhoto } from '../components/ProfilePhoto';
 import { ConfirmDialog } from '../components/ConfirmDialog';
 
 export default function Profile() {
@@ -72,8 +72,11 @@ export default function Profile() {
         animate={{ opacity: 1, y: 0, transition: { duration: 0.4, ease: [0.16, 1, 0.3, 1] } }}
         className="mt-8 flex flex-col gap-6 border-y border-white/[0.08] py-7 sm:flex-row sm:items-start"
       >
-        <div className="shrink-0">
-          <Avatar profile={profile} size="lg" />
+        <div className="flex shrink-0 flex-col items-start gap-2">
+          <ProfilePhoto path={profile.profile_photo_path} className="size-28" />
+          <Link to="/onboarding/edit" className="link text-sm">
+            {profile.profile_photo_path ? 'Change photo' : 'Add photo'}
+          </Link>
         </div>
 
         <div className="min-w-0 flex-1">
@@ -275,3 +278,4 @@ export default function Profile() {
     </div>
   );
 }
+

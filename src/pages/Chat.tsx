@@ -1,13 +1,14 @@
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Dices, SendHorizontal, X } from 'lucide-react';
+import { SendHorizontal, X } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../contexts/AuthContext';
 import { useToast } from '../contexts/ToastContext';
 import type { Match, Message } from '../lib/database.types';
 import { sparkStageFromCount } from '../lib/gamification';
 import { ConfirmDialog } from '../components/ConfirmDialog';
+import { ProfilePhoto } from '../components/ProfilePhoto';
 
 function timeOf(iso: string) {
   return new Date(iso).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
@@ -21,7 +22,9 @@ export default function Chat() {
 
   const [messages, setMessages] = useState<Message[]>([]);
   const [otherId, setOtherId] = useState<string | null>(null);
+  const [otherPhoto, setOtherPhoto] = useState<{ matchId: string; path: string | null }>();
   const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState('');
   const [input, setInput] = useState('');
   const [sending, setSending] = useState(false);
   const [confirmBlock, setConfirmBlock] = useState(false);
@@ -41,6 +44,10 @@ export default function Chat() {
 
     (async () => {
       setLoading(true);
+      setLoadError('');
+      setBlocked(false);
+      setBlockedByMe(false);
+      setOtherId(null);
       const [{ data, error }, { data: matchRow }] = await Promise.all([
         supabase
           .from('messages')
@@ -57,7 +64,13 @@ export default function Chat() {
         const themId = match.user1_id === meId ? match.user2_id : match.user1_id;
         setOtherId(themId);
 
-        const { data: blockRows } = await supabase.rpc('my_blocks');
+        const { data: blockRows, error: blockError } = await supabase.rpc('my_blocks');
+        if (!active) return;
+        if (blockError) {
+          setLoadError('Could not check this chat’s block status. Reload to try again.');
+          setLoading(false);
+          return;
+        }
         const pairs = (blockRows as { blocker_id: string; blocked_id: string }[] | null) ?? [];
         const mine = pairs.some((b) => b.blocker_id === meId && b.blocked_id === themId);
         const theirs = pairs.some((b) => b.blocker_id === themId && b.blocked_id === meId);
@@ -67,8 +80,8 @@ export default function Chat() {
         }
       }
 
-      if (error) {
-        toast(error.message, 'error');
+      if (error || !match) {
+        setLoadError(error?.message ?? 'This pairing could not be opened.');
         setLoading(false);
         return;
       }
@@ -83,7 +96,7 @@ export default function Chat() {
 
   // Live inserts for this match only. A blocked person's messages never land.
   useEffect(() => {
-    if (!matchId || blocked) return;
+    if (!matchId || loading || loadError || blocked) return;
 
     const channel = supabase
       .channel(`chat:${matchId}`)
@@ -100,7 +113,7 @@ export default function Chat() {
     return () => {
       supabase.removeChannel(channel);
     };
-  }, [matchId, blocked]);
+  }, [matchId, loading, loadError, blocked]);
 
   useEffect(() => {
     const el = listRef.current;
@@ -109,7 +122,7 @@ export default function Chat() {
 
   // Acknowledge anything the other side sent, while this screen is actually seen.
   useEffect(() => {
-    if (!matchId || !user) return;
+    if (!matchId || !user || loading || loadError || blocked) return;
     const unread = messages.filter((m) => m.sender_id !== user.id && !m.read_at);
     if (unread.length === 0) return;
 
@@ -130,14 +143,25 @@ export default function Chat() {
     markRead();
     document.addEventListener('visibilitychange', markRead);
     return () => document.removeEventListener('visibilitychange', markRead);
-  }, [messages, matchId, user]);
+  }, [messages, matchId, user, loading, loadError, blocked]);
 
   const { stage } = sparkStageFromCount(messages.length);
+  const showPhoto = !loading && !loadError && !blocked && stage >= 2;
+
+  useEffect(() => {
+    if (!showPhoto || !otherId || !matchId) return;
+    let active = true;
+    void supabase.from('profiles').select('profile_photo_path').eq('id', otherId).maybeSingle()
+      .then(({ data }) => {
+        if (active) setOtherPhoto({ matchId, path: data?.profile_photo_path ?? null });
+      });
+    return () => { active = false; };
+  }, [matchId, otherId, showPhoto]);
 
   async function handleSend(e: React.FormEvent) {
     e.preventDefault();
     const content = input.trim();
-    if (!content || !matchId || !user || sending || blocked) return;
+    if (!content || !matchId || !user || sending || loading || loadError || blocked) return;
 
     setSending(true);
     const { data, error } = await supabase
@@ -237,7 +261,8 @@ export default function Chat() {
       <header className="sticky top-0 z-40 border-b border-white/[0.08] bg-cream/95 backdrop-blur-sm">
         <div className="flex items-center justify-between gap-3 px-4 py-3">
           <div className="flex min-w-0 items-center gap-3">
-            <Dices size={18} className="liquid-gl shrink-0" />
+            <ProfilePhoto path={showPhoto && otherPhoto?.matchId === matchId ? otherPhoto?.path : null}
+              className="size-10" />
             <div className="min-w-0">
               <p className="truncate text-[14px] font-semibold tracking-[-0.01em] text-ink">
                 Chat
@@ -251,7 +276,7 @@ export default function Chat() {
           <nav className="flex shrink-0 items-center gap-2">
             <button
               onClick={() => setConfirmBlock(true)}
-              disabled={!otherId || blocked}
+              disabled={!otherId || loading || Boolean(loadError) || blocked}
               className="whitespace-nowrap rounded bg-white/[0.03] px-3 py-1.5 text-[12px] text-ink-soft transition hover:bg-white/[0.1] disabled:opacity-40"
             >
               Block
@@ -271,6 +296,8 @@ export default function Chat() {
       <main ref={listRef} className="flex-1 overflow-y-auto px-4 py-5">
         {loading ? (
           <p className="py-10 text-center text-[13px] text-ink-faint">Loading messages…</p>
+        ) : loadError ? (
+          <p role="alert" className="py-10 text-center text-sm text-ink-soft">{loadError}</p>
         ) : messages.length === 0 ? (
           <div className="mx-auto mt-10 max-w-[34ch] text-center">
             <p className="display-3 text-ink">Nobody has spoken yet.</p>
@@ -332,7 +359,7 @@ export default function Chat() {
             </button>
           </div>
         </div>
-      ) : (
+      ) : !loading && !loadError && (
         <form
           onSubmit={handleSend}
           className="border-t border-white/[0.08] bg-cream/95 px-4 py-3 pb-[max(0.75rem,env(safe-area-inset-bottom))]"
@@ -378,3 +405,4 @@ export default function Chat() {
     </div>
   );
 }
+

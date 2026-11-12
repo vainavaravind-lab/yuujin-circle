@@ -5,7 +5,7 @@ import { ChevronRight, Dices } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../contexts/AuthContext';
 import { usePresence } from '../contexts/PresenceContext';
-// avatar feature removed
+import { ProfilePhoto } from '../components/ProfilePhoto';
 import type { FriendRequest, Match, Message, Profile, UnreadCount } from '../lib/database.types';
 import { displayName } from '../lib/profile';
 import { relativeTime } from '../lib/format';
@@ -189,6 +189,7 @@ export default function Friends() {
           className="group flex items-center gap-4 py-4 transition-colors duration-200 hover:bg-white/[0.03]"
         >
           <span className="relative shrink-0">
+            <ProfilePhoto path={!blocked && isFriend ? other.profile_photo_path : null} className="size-10" />
             {!blocked && isOnline(other.id) && (
               <span
                 className="absolute -bottom-0.5 -right-0.5 h-3 w-3 rounded-full border-2 border-cream bg-teal-brand"
@@ -320,3 +321,4 @@ function EmptyFriends() {
     </div>
   );
 }
+

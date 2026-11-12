@@ -1,5 +1,8 @@
 # Handoff — Yuujin Circle (SNUC Campus Dating)
 
+This handoff records the state before the design and profile-photo update. For the
+new avatar storage and the rollout steps, see **SETUP.md**.
+
 Written 2026-11-12 to hand this project to another developer/assistant. Read this before touching
 the code: the **live database, not the repository, is the source of truth for what has actually been
 run**, and the two were out of sync until today.
@@ -163,3 +166,4 @@ Not verified / caveats:
   (`CartoonAvatar`, `lib/cartoon.ts`).
 - Anything touching blocks should read through `my_blocks()`, never a direct `blocks` select.
 - Verify with `npx tsc -b --pretty false` and `npm run build`; there is no test suite.
+

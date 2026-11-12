@@ -1,15 +1,6 @@
-import type { CartoonConfig } from './cartoon';
-
 export type Json = string | number | boolean | null | { [key: string]: Json | undefined } | Json[];
 
 export type LookingFor = 'dating' | 'friendship' | 'both';
-
-/** Shape of profiles.avatar — the cartoon avatar (Bitmoji-style character). */
-export type ProfileAvatar = {
-  v: 3;
-  config: CartoonConfig;
-  updated: string;
-};
 
 /** One answered icebreaker prompt: pick a question, write a short answer. */
 export type PromptAnswer = {
@@ -28,7 +19,8 @@ export type Profile = {
   interests: string[];
   looking_for: LookingFor | null;
   photos: string[];
-  avatar: ProfileAvatar | null;
+  avatar: Json | null;
+  profile_photo_path: string | null;
   prompts: PromptAnswer[];
   last_seen: string | null;
   onboarding_complete: boolean;
@@ -116,7 +108,8 @@ export type Database = {
           interests?: string[];
           looking_for?: LookingFor | null;
           photos?: string[];
-          avatar?: ProfileAvatar | null;
+          avatar?: Json | null;
+          profile_photo_path?: string | null;
           prompts?: PromptAnswer[];
           last_seen?: string | null;
           onboarding_complete?: boolean;
@@ -134,7 +127,8 @@ export type Database = {
           interests?: string[];
           looking_for?: LookingFor | null;
           photos?: string[];
-          avatar?: ProfileAvatar | null;
+          avatar?: Json | null;
+          profile_photo_path?: string | null;
           prompts?: PromptAnswer[];
           last_seen?: string | null;
           onboarding_complete?: boolean;
@@ -201,6 +195,19 @@ export type Database = {
       [_ in never]: never;
     };
     Functions: {
+      save_profile: {
+        Args: {
+          p_name: string;
+          p_department: string;
+          p_year: number;
+          p_bio: string;
+          p_interests: string[];
+          p_looking_for: LookingFor;
+          p_photo_path: string | null;
+          p_previous_photo_path: string | null;
+        };
+        Returns: undefined;
+      };
       pair_me_randomly: { Args: { allow_any?: boolean }; Returns: string | null };
       my_blocks: {
         Args: Record<string, never>;
@@ -225,3 +232,4 @@ export type Database = {
     };
   };
 };
+

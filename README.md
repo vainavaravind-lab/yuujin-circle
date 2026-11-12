@@ -2,8 +2,7 @@
 
 A college-exclusive dating app for **Shiv Nadar University Chennai** (`@snuchennai.edu.in` only).
 
-Mobile-first React SPA with a light, airy design, swipeable deck, mutual-match chat, and safety
-first throughout.
+Mobile-first React SPA with random campus pairings and a staged profile reveal.
 
 ## Tech
 
@@ -42,8 +41,7 @@ Full details, troubleshooting and production notes: see **SETUP.md**.
 
 - 🎓 Magic-link sign-in restricted to `@snuchennai.edu.in` (enforced in UI *and* by a database
   trigger on `auth.users`)
-- 🖼️ Onboarding wizard — up to 4 photos, name, age, department, year, bio, interest tags, "looking
-  for"
+- 🖼️ Onboarding and profile editing with an optional, privately stored profile photo
 - 🎲 Random pairing: get matched with a random classmate, chat instantly, add each other as friends when you both vibe
 - 💞 Mutual likes create a match with a celebration modal
 - 💬 Realtime chat — only between matched users
@@ -69,7 +67,13 @@ supabase/
 
 Streak 🔥, XP bar, 5 ⚡ sparks (1 per pairing, +1 every 20 min), Question of the Day,
 daily quests, and a campus League tab. Chats have a Spark meter — the other person's
-interests, avatar, name and profile un-blur over 5 stages (3/8/16/26/38 messages).
+interests, optional profile photo, name and course unlock at 3/8/16/26 messages.
 At stage 5 both people privately pick **Match or Pass**; only a mutual Match makes the
 friendship permanent. Backend lives in `supabase/patch-2026-10-06-spark-season.sql`
 (also appended to `schema.sql` §11).
+
+For an existing Supabase project, apply
+`supabase/patch-2026-11-12-profile-photos.sql` before deploying this version.
+It requires `my_blocks()` from `patch-2026-11-10-block-status.sql`.
+Fresh installations can run `schema.sql` alone.
+

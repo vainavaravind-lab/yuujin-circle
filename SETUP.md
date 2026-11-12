@@ -34,6 +34,20 @@ This one script created:
 
 ---
 
+### Upgrade an existing project
+
+Apply `supabase/patch-2026-11-12-profile-photos.sql` in the SQL Editor before deploying the
+updated frontend. Apply `supabase/patch-2026-11-10-block-status.sql` first if your project
+does not have `my_blocks()` yet. Fresh installations get both through `schema.sql`.
+
+New avatars use the private `profile-avatars` bucket. The photo owner can see it immediately.
+A current pairing can request a short-lived URL after eight messages while neither person has
+blocked the other. Existing gallery photos and cartoon configuration stay in the database.
+Members can add a new profile photo from Profile.
+
+If account deletion is deployed, redeploy the `delete-user` Edge Function after the SQL update
+so it also clears the new profile photo uploads.
+
 ## 3. Configure authentication
 
 In Supabase → **Authentication**:
@@ -135,3 +149,4 @@ works fine without it.
 | "Match not found" when opening chat | The match was deleted (e.g. block) or you're not a participant. |
 | Realtime messages don't appear | Confirm `messages` is in the `supabase_realtime` publication (schema adds it) and you ran the whole schema. |
 | Delete account errors | Deploy the `delete-user` function (step 6). |
+

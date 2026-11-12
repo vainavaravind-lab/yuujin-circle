@@ -2,8 +2,7 @@
 
 /* ------------------------------------------------------------------ */
 /*  Tokens                                                             */
-/*  Editorial direction: soft blue-slate neutrals for grounds, a       */
-/*  cyan-teal for action, rose only for the spark (and refusal).       */
+/*  Aubergine surfaces, paper-colored text, and citron for actions.   */
 /* ------------------------------------------------------------------ */
 
 @theme {
@@ -11,22 +10,22 @@
   --font-display: "Instrument Serif", ui-serif, Georgia, "Times New Roman", serif;
   --font-mono: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
 
-  /* Grounds — soft, blue-leaning neutrals. Never white, never pure black. */
-  --color-cream: #0a141c;
-  --color-cream-100: #101d28;
-  --color-cream-200: #162633;
-  --color-cream-300: #1d3040;
+  /* Surfaces */
+  --color-cream: #171320;
+  --color-cream-100: #211a2d;
+  --color-cream-200: #2b223a;
+  --color-cream-300: #362a48;
 
   /* Ink */
-  --color-ink: #e9eff5;
-  --color-ink-soft: #a2b3c4;
-  --color-ink-faint: #718697;
+  --color-ink: #f4eadb;
+  --color-ink-soft: #c9bcd2;
+  --color-ink-faint: #a395b2;
 
-  /* Blues + teals — the single action colour. */
-  --color-teal-brand: #3ec8d4;
-  --color-teal-deep: #8fe6ef;
-  --color-teal-soft: #6cbfd0;
-  --color-teal-mist: #123039;
+  /* Action colors, under the existing utility names. */
+  --color-teal-brand: #dbdfa0;
+  --color-teal-deep: #ebedb8;
+  --color-teal-soft: #c4cb88;
+  --color-teal-mist: #323323;
 
   /* Rose belongs to the spark, and to refusal. Nothing else. */
   --color-rose-brand: #ff8f8f;
@@ -627,3 +626,143 @@
     transform: none;
   }
 }
+
+/* Campus poster and pairing preview */
+.landing-hero {
+  background: #eee7d6;
+  color: #211e2a;
+  padding-block: calc(var(--nav) + clamp(3.5rem, 8vw, 8rem)) clamp(3rem, 7vw, 7rem);
+}
+
+.landing-hero-grid {
+  display: grid;
+  align-items: center;
+  gap: clamp(2.5rem, 6vw, 6rem);
+}
+
+.landing-hero-copy { min-width: 0; }
+.landing-hero .hero-kicker { color: #5a3e72; }
+.landing-hero .lead,
+.landing-hero #signin .text-ink-soft { color: #514659; }
+.landing-hero #signin label { color: #5a3e72; }
+.landing-hero #signin .input {
+  background: #fbf6eb;
+  border-color: #827586;
+  color: #211e2a;
+  min-width: 0;
+}
+.landing-hero #signin .input::placeholder { color: #63586b; }
+.landing-hero #signin .btn-primary {
+  background: #302044;
+  color: #f9f1e2;
+}
+.landing-hero #signin .btn-primary:hover { background: #472d62; }
+.landing-hero #signin .bg-teal-mist { background: #e1d7ec; }
+.landing-hero #signin .text-teal-deep,
+.landing-hero #signin .link { color: #462961; }
+
+.hero-title {
+  margin-top: 1.1rem;
+  font: 400 clamp(3.6rem, 8vw, 8rem)/0.85 var(--font-display);
+  letter-spacing: -0.045em;
+}
+.hero-title em { display: block; color: #5d4075; font-weight: inherit; }
+
+.pairing-poster {
+  position: relative;
+  display: grid;
+  min-height: 23rem;
+  align-items: center;
+  padding: clamp(1.5rem, 4vw, 3.5rem);
+  isolation: isolate;
+  perspective: 850px;
+  overflow: clip;
+  background: radial-gradient(circle, #362643 0.65px, transparent 0.8px) 0 0 / 6px 6px, #bdabd4;
+}
+.pairing-poster::after {
+  position: absolute;
+  inset: 0.75rem;
+  border: 1px solid #392a50;
+  content: '';
+  pointer-events: none;
+  z-index: -1;
+}
+.poster-orbit {
+  position: absolute;
+  inset: 12% -20% 12% -20%;
+  z-index: -1;
+  border-radius: 50%;
+  background: repeating-radial-gradient(ellipse at center, transparent 0 13px, #dcd99f 14px 16px);
+  transform: rotate(-26deg);
+}
+.poster-print {
+  position: absolute;
+  top: -0.08em;
+  left: -0.03em;
+  z-index: -1;
+  color: #dedfa7;
+  font: italic 400 clamp(12rem, 30vw, 26rem)/0.9 var(--font-display);
+  letter-spacing: -0.1em;
+}
+.poster-chat {
+  width: min(100%, 23rem);
+  margin-inline: auto;
+  color: var(--color-ink);
+  box-shadow: 12px 14px 0 #362643, 20px 29px 40px #23163069;
+}
+.reveal-card { transform-origin: center center; box-shadow: 9px 9px 0 #21182e; }
+
+@media (min-width: 64rem) {
+  .landing-hero-grid { grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); }
+  .pairing-poster { min-height: 32rem; }
+}
+
+@supports (animation-timeline: view()) {
+  @media (min-width: 64rem) and (prefers-reduced-motion: no-preference) {
+    .scene { perspective: 1000px; view-timeline-name: --pairing-reveal; }
+    .reveal-card {
+      animation: reveal-card-depth linear both;
+      animation-timeline: --pairing-reveal;
+      animation-range: entry 65% exit 20%;
+    }
+  }
+}
+
+@keyframes reveal-card-depth {
+  0% { transform: perspective(900px) rotateX(12deg) rotateY(-12deg); }
+  50% { transform: perspective(900px) rotateX(0deg) rotateY(0deg); }
+  100% { transform: perspective(900px) rotateX(-6deg) rotateY(7deg); }
+}
+
+.profile-photo {
+  display: inline-grid;
+  flex-shrink: 0;
+  place-items: center;
+  overflow: hidden;
+  border-radius: 50%;
+  border: 1px solid rgb(255 255 255 / 0.18);
+  background: var(--color-cream-200);
+  color: var(--color-teal-deep);
+  vertical-align: middle;
+}
+.profile-photo img { width: 100%; height: 100%; object-fit: cover; }
+.profile-editor { max-width: 42rem; padding-block: 3.5rem; }
+.profile-editor select { width: 100%; color-scheme: dark; }
+.profile-interest[aria-pressed="true"] {
+  border-color: var(--color-teal-brand);
+  color: var(--color-teal-deep);
+  background: var(--color-teal-mist);
+}
+.profile-interest:disabled { opacity: 0.5; }
+.app-shell main {
+  background: linear-gradient(115deg, #2a1c36 0%, transparent 56%) no-repeat 0 0 / 100% 22rem;
+}
+.app-shell main > div > div > header .display-1 { letter-spacing: -0.035em; }
+.app-tab { color: var(--color-ink-soft); }
+.app-tab:hover,
+.app-tab[aria-current="page"] { color: var(--color-teal-deep); }
+
+@media (prefers-reduced-motion: reduce) {
+  .poster-chat, .poster-orbit, .reveal-card { animation: none; transform: none !important; }
+}
+

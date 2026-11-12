@@ -38,7 +38,7 @@ export function AppShell() {
 
   return (
     <PresenceProvider>
-      <div className="flex min-h-dvh flex-col bg-cream">
+      <div className="app-shell flex min-h-dvh flex-col bg-cream">
         <header
           className="sticky top-0 z-40 border-b border-white/[0.08] bg-cream/95 backdrop-blur-sm"
         >
@@ -84,7 +84,7 @@ export function AppShell() {
           </AnimatePresence>
         </main>
 
-        <nav
+        <nav aria-label="Campus navigation"
           className="fixed inset-x-0 bottom-0 z-40 border-t border-white/[0.08] bg-cream/95 pb-[env(safe-area-inset-bottom)] backdrop-blur-sm"
         >
           <div className="wrap grid grid-cols-4">
@@ -92,7 +92,7 @@ export function AppShell() {
               <NavLink
                 key={to}
                 to={to}
-                className="relative flex flex-col items-center gap-1 py-3"
+                className="app-tab relative flex flex-col items-center gap-1 py-3"
               >
                 {({ isActive }) => (
                   <>
@@ -107,9 +107,9 @@ export function AppShell() {
                     <Icon
                       size={18}
                       strokeWidth={isActive ? 2.2 : 1.7}
-                      className="liquid-gl"
+                      aria-hidden="true"
                     />
-                    <span />
+                    <span className="text-xs font-medium">{label}</span>
                   </>
                 )}
               </NavLink>
@@ -120,3 +120,4 @@ export function AppShell() {
     </PresenceProvider>
   );
 }
+
