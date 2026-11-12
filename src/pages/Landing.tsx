@@ -1,5 +1,5 @@
 import { useRef, useState, type FormEvent } from 'react';
-import { CHAT_STEPS, ScrollChat } from '../components/ScrollChat';
+import { CHAT_STEPS, ChatChapter, ScrollChat } from '../components/ScrollChat';
 import { ArrowRight, Mail, ShieldCheck, Zap } from 'lucide-react';
 import { supabase, isSupabaseConfigured } from '../lib/supabase';
 import { COLLEGE_DOMAIN } from '../lib/constants';
@@ -159,11 +159,7 @@ export default function Landing() {
             <ScrollChat story={story} />
             <div ref={story} className="scroll-chat-story">
               {CHAT_STEPS.map((step, index) => (
-                <section key={step.title} className="scroll-chat-chapter">
-                  <p className="label">{index >= 6 ? 'Daily streak' : step.count + ' messages'}</p>
-                  <h2 className="display-2">{step.title}</h2>
-                  <p>{step.detail}</p>
-                </section>
+                <ChatChapter key={step.title} index={index} />
               ))}
             </div>
           </Wrap>
