@@ -1,5 +1,5 @@
 import { useRef, useState, type RefObject } from 'react';
-import { motion, useMotionValueEvent, useReducedMotion, useScroll, useTransform } from 'framer-motion';
+import { motion, useMotionValueEvent, useReducedMotion, useScroll, useSpring, useTransform } from 'framer-motion';
 import { Camera, Flame, Heart } from 'lucide-react';
 
 export const CHAT_STEPS = [
@@ -16,19 +16,24 @@ export const CHAT_STEPS = [
 export function ScrollChat({ story }: { story: RefObject<HTMLDivElement> }) {
   const reduced = useReducedMotion();
   const { scrollYProgress } = useScroll({ target: story, layoutEffect: false, offset: ['start 75%', 'end 85%'] });
+  const flow = useSpring(scrollYProgress, { stiffness: 120, damping: 28, mass: .55, restDelta: .0001 });
   const [step, setStep] = useState(0);
   useMotionValueEvent(scrollYProgress, 'change', value => {
     setStep(Math.min(CHAT_STEPS.length - 1, Math.floor(value * CHAT_STEPS.length)));
   });
   const beats = [0, .15, .28, .4, .53, .66, .8, 1];
-  const rotateX = useTransform(scrollYProgress, beats, [12, -5, 0, 7, -6, 0, 8, 0]);
-  const rotateY = useTransform(scrollYProgress, beats, [-14, 8, 0, -9, 10, 0, -7, 0]);
-  const rotate = useTransform(scrollYProgress, beats, [-5, 3, -2, 2, -3, 0, 3, 0]);
-  const scale = useTransform(scrollYProgress, beats, [.88, 1, 1.12, .94, 1.08, 1.13, .95, 1]);
+  const rotateX = useTransform(flow, beats, [12, -5, 0, 7, -6, 0, 8, 0]);
+  const rotateY = useTransform(flow, beats, [-14, 8, 0, -9, 10, 0, -7, 0]);
+  const rotate = useTransform(flow, beats, [-5, 3, -2, 2, -3, 0, 3, 0]);
+  const scale = useTransform(flow, beats, [.92, 1, 1.06, .97, 1.04, 1.06, .97, 1]);
+  // The entire composition breathes; the inner card follows with quieter motion.
+  const sceneScale = useTransform(flow, [0, .12, .23, .34, .48, .60, .73, .84, .94, 1], [.9, 1.06, .88, 1.04, .9, 1.06, .88, 1.03, 1.04, 1]);
+  const sceneY = useTransform(flow, beats, [0, 16, 6, 20, 4, 18, 8, 0]);
+  const sceneRotate = useTransform(flow, beats, [0, 1.2, -1.2, .8, -1, 1.2, -.8, 0]);
   const orbitRotate = useTransform(scrollYProgress, [0, 1], [-35, 145]);
   const haloX = useTransform(scrollYProgress, [0, .5, 1], ['-25%', '25%', '-10%']);
   // Move between clear reading lanes; cross the center only between chapters.
-  const travel = useTransform(scrollYProgress,
+  const travel = useTransform(flow,
     [0, .21, .26, .45, .51, .70, .76, .85, .92, 1],
     ['0%', '0%', '-132%', '-132%', '0%', '0%', '-132%', '-132%', '-66%', '-66%']);
   const lightX = useTransform(scrollYProgress, [.85, 1], ['-110%', '110%']);
@@ -39,6 +44,7 @@ export function ScrollChat({ story }: { story: RefObject<HTMLDivElement> }) {
 
   return (
     <motion.aside className="scroll-chat-pin" aria-label="Illustrated chat walkthrough" style={reduced ? undefined : { x: travel }}>
+      <motion.div className="scroll-chat-scene" style={reduced ? undefined : { scale: sceneScale, y: sceneY, rotate: sceneRotate }}>
       <div className={`pairing-poster scroll-chat-poster chat-phase-${step}`}>
         <motion.div className="chat-color-field" aria-hidden="true" style={reduced ? undefined : { x: haloX, rotate: orbitRotate }} />
         <motion.div className="poster-orbit" aria-hidden="true" style={reduced ? undefined : { rotate: orbitRotate }} />
@@ -84,6 +90,7 @@ export function ScrollChat({ story }: { story: RefObject<HTMLDivElement> }) {
         </motion.div>
       </div>
       <p className="scroll-chat-caption">Example conversation · scroll to follow along</p>
+      </motion.div>
     </motion.aside>
   );
 }

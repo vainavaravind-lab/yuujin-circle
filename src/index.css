@@ -966,3 +966,14 @@
  .scroll-chat-pin:has(.chat-phase-7) .scroll-chat-caption {visibility:hidden;}
  .chapter-7 h2 {position:relative;top:24px;}
 }
+
+/* Keep translation and scene scale on separate layers for a floating trajectory. */
+.scroll-chat-scene {transform-origin:50% 12%;will-change:transform;}
+.scroll-chat-poster {transition:background .7s ease,height .65s cubic-bezier(.22,1,.36,1),padding .65s cubic-bezier(.22,1,.36,1);}
+@media(max-width:63.99rem) {
+ .scroll-chat-scene {width:calc(100% - 12px);margin-inline:auto;}
+}
+@media(prefers-reduced-motion:reduce) {
+ .scroll-chat-scene {will-change:auto;}
+ .scroll-chat-poster {transition:none;}
+}
