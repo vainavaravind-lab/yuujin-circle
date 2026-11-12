@@ -159,7 +159,7 @@ export default function Landing() {
             <ScrollChat story={story} />
             <div ref={story} className="scroll-chat-story">
               {CHAT_STEPS.map((step, index) => (
-                <ChatChapter key={step.title} index={index} />
+                <ChatChapter key={step.title} index={index} story={story} />
               ))}
             </div>
           </Wrap>

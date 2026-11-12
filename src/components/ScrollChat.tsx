@@ -27,17 +27,27 @@ export function ScrollChat({ story }: { story: RefObject<HTMLDivElement> }) {
   const scale = useTransform(scrollYProgress, beats, [.88, 1, 1.12, .94, 1.08, 1.13, .95, 1]);
   const orbitRotate = useTransform(scrollYProgress, [0, 1], [-35, 145]);
   const haloX = useTransform(scrollYProgress, [0, .5, 1], ['-25%', '25%', '-10%']);
+  // Move between clear reading lanes; cross the center only between chapters.
+  const travel = useTransform(scrollYProgress,
+    [0, .21, .26, .45, .51, .70, .76, .85, .92, 1],
+    ['0%', '0%', '-132%', '-132%', '0%', '0%', '-132%', '-132%', '-66%', '-66%']);
+  const lightX = useTransform(scrollYProgress, [.85, 1], ['-110%', '110%']);
+  const driftX = useTransform(scrollYProgress, beats, [0, 8, -8, -6, 8, 6, -8, 0]);
+  const glassOpacity = useTransform(scrollYProgress, [.84, .94], [0, 1]);
   const current = CHAT_STEPS[step];
   const stage = [3, 8, 16, 26, 38].filter(n => current.count >= n).length;
 
   return (
-    <aside className="scroll-chat-pin" aria-label="Illustrated chat walkthrough">
+    <motion.aside className="scroll-chat-pin" aria-label="Illustrated chat walkthrough" style={reduced ? undefined : { x: travel }}>
       <div className={`pairing-poster scroll-chat-poster chat-phase-${step}`}>
         <motion.div className="chat-color-field" aria-hidden="true" style={reduced ? undefined : { x: haloX, rotate: orbitRotate }} />
         <motion.div className="poster-orbit" aria-hidden="true" style={reduced ? undefined : { rotate: orbitRotate }} />
         <div className="poster-print" aria-hidden="true">yc.</div>
+        <motion.div className="chat-prism" aria-hidden="true" style={{ opacity: reduced ? (step === 7 ? 1 : 0) : glassOpacity }}>
+          <motion.div className="chat-prism-light" style={reduced ? undefined : { x: lightX }} />
+        </motion.div>
         <motion.div className="poster-chat scroll-chat-card"
-          style={reduced ? undefined : { rotateX, rotateY, rotate, scale }}>
+          style={reduced ? undefined : { rotateX, rotateY, rotate, scale, x: driftX }}>
           <div className="scroll-chat-header">
             <span className="scroll-chat-avatar" aria-hidden="true">{step >= 2 ? <Camera size={18} /> : '?'}</span>
             <div>
@@ -74,7 +84,7 @@ export function ScrollChat({ story }: { story: RefObject<HTMLDivElement> }) {
         </motion.div>
       </div>
       <p className="scroll-chat-caption">Example conversation · scroll to follow along</p>
-    </aside>
+    </motion.aside>
   );
 }
 
@@ -85,19 +95,23 @@ const CHAPTER_LINES = [
   ['One more day.', 'One more hello.'], ['Strangers once.', 'A ritual now.'],
 ];
 
-export function ChatChapter({ index }: { index: number }) {
+export function ChatChapter({ index, story }: { index: number; story: RefObject<HTMLDivElement> }) {
   const ref = useRef<HTMLElement>(null);
   const reduced = useReducedMotion();
   const { scrollYProgress } = useScroll({ target: ref, offset: ['start end', 'end start'] });
   const y = useTransform(scrollYProgress, [0, .5, 1], [35, 0, -25]);
   const rotate = useTransform(scrollYProgress, [0, .5, 1], [-3, 0, 2]);
+  const { scrollYProgress: journey } = useScroll({ target: story, layoutEffect: false, offset: ['start 75%', 'end 85%'] });
+  const start = index / 8;
+  const opacity = useTransform(journey, [Math.max(0, start - .025), start + .025, start + .09, Math.min(1, start + .125)], [0, 1, 1, 0]);
+  const x = useTransform(journey, [start, start + .04, start + .125], [index === 2 || index === 3 || index === 6 ? 30 : -30, 0, 0]);
   const step = CHAT_STEPS[index];
-  return <section ref={ref} className={`scroll-chat-chapter chapter-${index}`}>
+  return <motion.section ref={ref} className={`scroll-chat-chapter chapter-${index}`} style={reduced ? undefined : { opacity: index === 7 ? undefined : opacity, x }}>
     <p className="label"><span className="chapter-dot" />{index >= 6 ? 'Daily streak · day ' + (index - 4) : step.count + ' messages'}</p>
     <motion.h2 style={reduced ? undefined : { y }}>
       <span>{CHAPTER_LINES[index][0]}</span>
       <motion.em style={reduced ? undefined : { rotate }}>{CHAPTER_LINES[index][1]}</motion.em>
     </motion.h2>
     <motion.p initial={reduced ? false : { opacity: .3, y: 16 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ amount: .8 }} transition={{ duration: .5 }}>{step.detail}</motion.p>
-  </section>;
+  </motion.section>;
 }
