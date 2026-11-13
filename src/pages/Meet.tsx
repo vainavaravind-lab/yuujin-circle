@@ -1,3 +1,4 @@
+import { CampusHeader } from '../components/CampusHeader';
 import { useCallback, useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
@@ -236,14 +237,13 @@ export default function Meet() {
   };
 
   return (
-    <div className="pb-4">
-      <header>
-        <h1 className="display-1">Meet</h1>
+    <div className="campus-page campus-meet pb-4">
+      <CampusHeader label="One spark. One classmate." title="Meet someone" accent="unexpected." mark="✳">
         <p className="lead mt-3 max-w-[46ch]">
           One spark puts you in a chat with a classmate you have never spoken to. Neither of you sees
           who the other is until the conversation earns it.
         </p>
-      </header>
+            </CampusHeader>
 
       {/* ---------------- sparks and standing ---------------- */}
       <section className="mt-8 flex flex-wrap items-end justify-between gap-6 border-y border-white/[0.08] py-5">
@@ -342,12 +342,12 @@ export default function Meet() {
             key="empty"
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0, transition: { duration: 0.35, ease: [0.16, 1, 0.3, 1] } }}
-            className="card mt-8 p-6 sm:p-8"
+            className="card pairing-draw mt-8 p-6 sm:p-8"
           >
             <span className="label flex items-center gap-1.5">
               <Dices size={12} /> nothing open
             </span>
-            <h2 className="display-2 mt-2">Draw a classmate</h2>
+            <div className="draw-dice" aria-hidden="true"><GlassDice /></div><h2 className="display-2 mt-2">A hello you didn’t plan.</h2>
             <p className="lead mt-3 max-w-[46ch]">
               Your spark picks someone at random from everyone verified on campus. No grid, no
               photos, no ranking — and they never find out you were the one who drew them.

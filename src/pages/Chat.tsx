@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { SendHorizontal, X } from 'lucide-react';
+import { ArrowLeft, SendHorizontal, X } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../contexts/AuthContext';
 import { useToast } from '../contexts/ToastContext';
@@ -9,6 +9,7 @@ import type { Match, Message } from '../lib/database.types';
 import { sparkStageFromCount } from '../lib/gamification';
 import { ConfirmDialog } from '../components/ConfirmDialog';
 import { ProfilePhoto } from '../components/ProfilePhoto';
+import { SparkMeter } from '../components/SparkMeter';
 
 function timeOf(iso: string) {
   return new Date(iso).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
@@ -257,15 +258,16 @@ export default function Chat() {
   }
 
   return (
-    <div className="flex h-dvh flex-col bg-cream">
+    <div className="live-chat-stage"><div className="live-chat-frame flex flex-col bg-cream">
       <header className="sticky top-0 z-40 border-b border-white/[0.08] bg-cream/95 backdrop-blur-sm">
         <div className="flex items-center justify-between gap-3 px-4 py-3">
           <div className="flex min-w-0 items-center gap-3">
+            <button className="chat-back" onClick={() => navigate('/friends')} aria-label="Back to friends"><ArrowLeft size={18} /></button>
             <ProfilePhoto path={showPhoto && otherPhoto?.matchId === matchId ? otherPhoto?.path : null}
               className="size-10" />
             <div className="min-w-0">
               <p className="truncate text-[14px] font-semibold tracking-[-0.01em] text-ink">
-                Chat
+                Your conversation
               </p>
               <p className="label mt-0.5">
                 {messages.length} {messages.length === 1 ? 'message' : 'messages'} · stage {stage}/5
@@ -293,7 +295,7 @@ export default function Chat() {
 
       </header>
 
-      <main ref={listRef} className="flex-1 overflow-y-auto px-4 py-5">
+      <main ref={listRef} className="min-h-0 flex-1 overflow-y-auto px-4 py-5">
         {loading ? (
           <p className="py-10 text-center text-[13px] text-ink-faint">Loading messages…</p>
         ) : loadError ? (
@@ -317,9 +319,9 @@ export default function Chat() {
                   className={`flex ${mine ? 'justify-end' : 'justify-start'}`}
                 >
                   <div
-                    className={`max-w-[78%] rounded-2xl px-3.5 py-2 ${
+                    className={`chat-bubble max-w-[78%] rounded-2xl px-3.5 py-2 ${
                       mine
-                        ? 'rounded-br-md bg-teal-mist text-ink'
+                        ? 'chat-bubble-mine rounded-br-md bg-teal-mist text-ink'
                         : 'rounded-bl-md bg-white/[0.05] text-ink'
                     }`}
                   >
@@ -336,6 +338,12 @@ export default function Chat() {
           </ul>
         )}
       </main>
+
+      {!loading && !loadError && !blocked && <div className="live-chat-spark">
+        <div><span className="label">Spark meter</span><span className="label">{messages.length} / 38</span></div>
+        <SparkMeter count={messages.length} />
+        <p>{stage < 5 ? 'A little more conversation. A little less mystery.' : 'All five reveal milestones reached.'}</p>
+      </div>}
 
       {blocked ? (
         <div className="border-t border-white/[0.08] bg-cream/95 px-4 pt-4 pb-[max(0.75rem,env(safe-area-inset-bottom))]">
@@ -402,7 +410,6 @@ export default function Chat() {
         onConfirm={blockPerson}
         onCancel={() => setConfirmBlock(false)}
       />
-    </div>
+    </div></div>
   );
 }
-

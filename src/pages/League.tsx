@@ -1,3 +1,4 @@
+import { CampusHeader } from '../components/CampusHeader';
 import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { Flame, Trophy } from 'lucide-react';
@@ -44,17 +45,16 @@ export default function League() {
   const rest = board.slice(3);
 
   return (
-    <div className="pb-4">
-      <header>
-        <h1 className="display-1">League</h1>
+    <div className="campus-page campus-league pb-4">
+      <CampusHeader label="Small moments add up" title="Find your" accent="momentum." mark="✦">
         <p className="lead mt-3 max-w-[46ch]">
           The campus top fifty. XP comes from showing up: a chat kept alive, a question answered, a
           draw taken.
         </p>
-      </header>
+            </CampusHeader>
 
       {/* ---------------- my standing ---------------- */}
-      <section className="mt-9 border-y border-white/[0.08] py-6">
+      <section className="league-standing mt-9 border-y border-white/[0.08] py-6">
         <div className="flex flex-wrap items-end justify-between gap-6">
           <div>
             <span className="label flex items-center gap-1.5">
@@ -101,7 +101,7 @@ export default function League() {
 
       {/* ---------------- the three at the top ---------------- */}
       {!loading && podium.length > 0 && (
-        <section className="mt-10 grid grid-cols-3 items-end gap-3 sm:gap-6">
+        <section className="league-podium mt-10 grid grid-cols-3 items-end gap-3 sm:gap-6">
           {[podium[1], podium[0], podium[2]].map((p, i) => {
             if (!p) return <div key={i} />;
             const place = i === 1 ? 1 : i === 0 ? 2 : 3;

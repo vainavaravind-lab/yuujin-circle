@@ -1,3 +1,4 @@
+import { CampusHeader } from '../components/CampusHeader';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
@@ -247,9 +248,8 @@ export default function Friends() {
   };
 
   return (
-    <div className="pb-4">
-      <header>
-        <h1 className="display-1">Friends</h1>
+    <div className="campus-page campus-friends pb-4">
+      <CampusHeader label="Your campus, a little closer" title="Strangers once." accent="Your circle now." mark="↔">
         <p className="lead mt-3 max-w-[46ch]">
           A pairing becomes a friendship when you both ask for it. Until then it sits here, open.
         </p>
@@ -259,7 +259,7 @@ export default function Friends() {
             {totalUnread > 0 ? ` · ${totalUnread} unread` : ''}
           </p>
         )}
-      </header>
+            </CampusHeader>
 
       {loading ? (
         <div className="mt-8">
@@ -308,7 +308,7 @@ export default function Friends() {
 
 function EmptyFriends() {
   return (
-    <div className="mt-10 max-w-[52ch] border border-white/10 p-8">
+    <div className="friends-empty mt-10 border border-white/10 p-8">
       <Dices size={28} strokeWidth={1.4} className="text-teal-brand" />
       <h2 className="display-2 mt-5">Nothing here yet</h2>
       <p className="mt-3 text-[15px] leading-[1.6] text-ink-soft">
@@ -321,4 +321,3 @@ function EmptyFriends() {
     </div>
   );
 }
-

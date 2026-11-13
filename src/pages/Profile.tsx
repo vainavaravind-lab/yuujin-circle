@@ -1,3 +1,4 @@
+import { CampusHeader } from '../components/CampusHeader';
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
@@ -57,20 +58,19 @@ export default function Profile() {
   if (!profile) return null;
 
   return (
-    <div className="pb-4">
-      <header>
-        <h1 className="display-1">Profile</h1>
+    <div className="campus-page campus-profile pb-4">
+      <CampusHeader label="The person behind the conversation" title="Entirely," accent="you." mark="yc.">
         <p className="lead mt-3 max-w-[46ch]">
           What a classmate sees once the meter has filled: the three answers, the interests, and the
           course your @{COLLEGE_DOMAIN} address proved.
         </p>
-      </header>
+            </CampusHeader>
 
       {/* ---------------- identity ---------------- */}
       <motion.section
         initial={{ opacity: 0, y: 8 }}
         animate={{ opacity: 1, y: 0, transition: { duration: 0.4, ease: [0.16, 1, 0.3, 1] } }}
-        className="mt-8 flex flex-col gap-6 border-y border-white/[0.08] py-7 sm:flex-row sm:items-start"
+        className="profile-identity mt-8 flex flex-col gap-6 border-y border-white/[0.08] py-7 sm:flex-row sm:items-start"
       >
         <div className="flex shrink-0 flex-col items-start gap-2">
           <ProfilePhoto path={profile.profile_photo_path} className="size-28" />
@@ -278,4 +278,3 @@ export default function Profile() {
     </div>
   );
 }
-
