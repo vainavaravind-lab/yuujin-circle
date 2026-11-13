@@ -5,6 +5,7 @@ import { supabase, isSupabaseConfigured } from '../lib/supabase';
 import { COLLEGE_DOMAIN } from '../lib/constants';
 import { useToast } from '../contexts/ToastContext';
 import { LogoMark } from '../components/Logo';
+import { TideLight, TideText } from '../components/Tide';
 
 const MAIN_ACTION = 'Email me a sign-in link';
 
@@ -99,16 +100,17 @@ export default function Landing() {
       </header>
 
       <main className="landing">
+        <TideLight />
         {/* ---------------- hero ---------------- */}
         <section className="landing-hero">
           <Wrap className="landing-hero-grid">
             <div className="landing-hero-copy">
-              <p className="label hero-kicker">Dating &amp; friendship at SNU Chennai</p>
+              <TideText><p className="label hero-kicker">Dating &amp; friendship at SNU Chennai</p>
               <h1 className="hero-title">Meet someone <em>between classes.</em></h1>
               <p className="lead mt-6 max-w-[38ch]">
                 Spend a spark to chat with a random classmate. As you talk, you’ll find out
                 who’s on the other side.
-              </p>
+              </p></TideText>
               <div id="signin" className="mt-9 max-w-md scroll-mt-28">
                 {sent ? (
                   <div className="border border-teal-brand/30 bg-teal-mist px-5 py-4" style={{ borderRadius: 12 }}>
@@ -170,7 +172,7 @@ export default function Landing() {
           <Wrap>
             <div className="grid gap-10 lg:grid-cols-12 lg:gap-8">
               <div className="lg:col-span-5">
-                <h2 className="display-2 max-w-[16ch] rise">How a pairing runs</h2>
+                <TideText><h2 className="display-2 max-w-[16ch] rise">How a pairing runs</h2></TideText>
                 <p className="lead mt-5 max-w-[38ch] rise">
                   Three moves, in order, the same for everyone on campus.
                 </p>
@@ -203,7 +205,7 @@ export default function Landing() {
         <section className="border-t border-white/[0.08] py-20 sm:py-28">
           <Wrap className="grid gap-12 lg:grid-cols-12 lg:gap-8">
             <div className="lg:col-span-5">
-              <h2 className="display-2 max-w-[15ch] rise">Only your campus gets in</h2>
+              <TideText><h2 className="display-2 max-w-[15ch] rise">Only your campus gets in</h2></TideText>
               <p className="lead mt-5 max-w-[40ch] rise">
                 A college address is the whole verification. It is checked before an account exists,
                 not after.
@@ -250,7 +252,7 @@ export default function Landing() {
           <Wrap>
             <div className="grid gap-10 lg:grid-cols-12 lg:gap-8">
               <div className="lg:col-span-7">
-                <h2 className="display-1 max-w-[20ch] rise">Take a draw before the term ends</h2>
+                <TideText><h2 className="display-1 max-w-[20ch] rise">Take a draw before the term ends</h2></TideText>
                 <p className="lead mt-5 max-w-[42ch] rise">
                   Five sparks are already waiting. One of them is the person you have walked past all
                   semester.

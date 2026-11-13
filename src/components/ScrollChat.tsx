@@ -1,6 +1,7 @@
 import { useRef, useState, type RefObject } from 'react';
 import { motion, useMotionValueEvent, useReducedMotion, useScroll, useSpring, useTransform } from 'framer-motion';
 import { Camera, Flame, Heart } from 'lucide-react';
+import { TideText } from './Tide';
 
 export const CHAT_STEPS = [
   { count: 0, title: 'A conversation starts with a little mystery.', detail: 'One spark pairs you with a random classmate. Say hello before you know their name.', messages: ['Triangles, circles or squares?'] },
@@ -28,8 +29,8 @@ export function ScrollChat({ story }: { story: RefObject<HTMLDivElement> }) {
   const scale = useTransform(flow, beats, [.92, 1, 1.06, .97, 1.04, 1.06, .97, 1]);
   // The entire composition breathes; the inner card follows with quieter motion.
   const sceneScale = useTransform(flow, [0, .12, .23, .34, .48, .60, .73, .84, .94, 1], [.9, 1.06, .88, 1.04, .9, 1.06, .88, 1.03, 1.04, 1]);
-  const sceneY = useTransform(flow, beats, [0, 16, 6, 20, 4, 18, 8, 0]);
-  const sceneRotate = useTransform(flow, beats, [0, 1.2, -1.2, .8, -1, 1.2, -.8, 0]);
+  const sceneY = useTransform(flow, value => Math.sin(value * Math.PI * 6) * 12 + 12 * Math.sin(value * Math.PI));
+  const sceneRotate = useTransform(flow, value => Math.sin(value * Math.PI * 6) * 1.3);
   const orbitRotate = useTransform(scrollYProgress, [0, 1], [-35, 145]);
   const haloX = useTransform(scrollYProgress, [0, .5, 1], ['-25%', '25%', '-10%']);
   // Move between clear reading lanes; cross the center only between chapters.
@@ -115,10 +116,10 @@ export function ChatChapter({ index, story }: { index: number; story: RefObject<
   const step = CHAT_STEPS[index];
   return <motion.section ref={ref} className={`scroll-chat-chapter chapter-${index}`} style={reduced ? undefined : { opacity: index === 7 ? undefined : opacity, x }}>
     <p className="label"><span className="chapter-dot" />{index >= 6 ? 'Daily streak · day ' + (index - 4) : step.count + ' messages'}</p>
-    <motion.h2 style={reduced ? undefined : { y }}>
+    <TideText><motion.h2 style={reduced ? undefined : { y }}>
       <span>{CHAPTER_LINES[index][0]}</span>
       <motion.em style={reduced ? undefined : { rotate }}>{CHAPTER_LINES[index][1]}</motion.em>
-    </motion.h2>
-    <motion.p initial={reduced ? false : { opacity: .3, y: 16 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ amount: .8 }} transition={{ duration: .5 }}>{step.detail}</motion.p>
+    </motion.h2></TideText>
+    <TideText><p className="chapter-detail">{step.detail}</p></TideText>
   </motion.section>;
 }

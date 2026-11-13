@@ -977,3 +977,14 @@
  .scroll-chat-scene {will-change:auto;}
  .scroll-chat-poster {transition:none;}
 }
+
+/* Broad light currents stay behind content; text recedes only after its reading pause. */
+.landing {position:relative;isolation:isolate;}
+.tide-light {position:absolute;inset:0;overflow:clip;pointer-events:none;z-index:-1;}
+.tide-light > div {position:absolute;inset:-10% -30%;background:repeating-radial-gradient(ellipse at 15% 45%,transparent 0 90px,#c2d9d510 110px,#dfc6ec14 140px,transparent 190px);filter:blur(12px);}
+.landing-hero {background-color:#eee7d6;position:relative;isolation:isolate;}
+.landing-hero::before {content:'';position:absolute;inset:0;z-index:-1;pointer-events:none;background:radial-gradient(ellipse at 10% 35%,#bdd7d42b,transparent 45%),radial-gradient(ellipse at 90% 70%,#d3bde82b,transparent 45%);}
+.tide-text-anchor {min-width:0;}
+.chapter-detail {color:#514659;max-width:36ch;margin-top:2rem;line-height:1.75;}
+@media(max-width:63.99rem) {.chapter-detail {font-size:.85rem;margin-top:1.3rem;}}
+@media(min-width:64rem) {.chapter-7 .chapter-detail {max-width:48ch;}}
