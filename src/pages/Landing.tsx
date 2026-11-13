@@ -1,4 +1,5 @@
-import { useRef, useState, type FormEvent } from 'react';
+import { useEffect, useRef, useState, type FormEvent, type MouseEvent } from 'react';
+import { animate } from 'framer-motion';
 import { CHAT_STEPS, ChatChapter, ScrollChat } from '../components/ScrollChat';
 import { ArrowRight, Mail, ShieldCheck, Zap } from 'lucide-react';
 import { supabase, isSupabaseConfigured } from '../lib/supabase';
@@ -45,6 +46,52 @@ function Wrap({ children, className = '' }: { children: React.ReactNode; classNa
 }
 
 export default function Landing() {
+  const stopScroll = useRef<(() => void) | null>(null);
+  useEffect(() => () => stopScroll.current?.(), []);
+
+  function glideToSignIn(event: MouseEvent<HTMLAnchorElement>) {
+    if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+    const destination = document.getElementById('signin');
+    if (!destination) return;
+    event.preventDefault();
+    stopScroll.current?.();
+    const start = window.scrollY;
+    const top = Math.max(0, destination.getBoundingClientRect().top + start - 112);
+    const root = document.documentElement;
+    const previous = root.style.scrollBehavior;
+    root.style.scrollBehavior = 'auto';
+    const finish = () => {
+      history.replaceState(null, '', '#signin');
+      destination.querySelector<HTMLInputElement>('input')?.focus({ preventScroll: true });
+    };
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      window.scrollTo(0, top);
+      root.style.scrollBehavior = previous;
+      finish();
+      return;
+    }
+    const cancel = () => { controls.stop(); cleanup(); };
+    const onKey = (e: KeyboardEvent) => {
+      if (['ArrowUp', 'ArrowDown', 'PageUp', 'PageDown', 'Home', 'End', ' ', 'Escape', 'Tab'].includes(e.key)) cancel();
+    };
+    const cleanup = () => {
+      root.style.scrollBehavior = previous;
+      window.removeEventListener('wheel', cancel);
+      window.removeEventListener('touchstart', cancel);
+      window.removeEventListener('keydown', onKey);
+      stopScroll.current = null;
+    };
+    const controls = animate(start, top, {
+      duration: Math.min(3.4, Math.max(1.2, Math.abs(top - start) / 2300)),
+      ease: [.45, 0, .2, 1],
+      onUpdate: value => window.scrollTo(0, value),
+      onComplete: () => { cleanup(); finish(); },
+    });
+    stopScroll.current = cancel;
+    window.addEventListener('wheel', cancel, { passive: true });
+    window.addEventListener('touchstart', cancel, { passive: true });
+    window.addEventListener('keydown', onKey);
+  }
   const { toast } = useToast();
   const story = useRef<HTMLDivElement>(null);
   const [email, setEmail] = useState('');
@@ -90,7 +137,7 @@ export default function Landing() {
             <span className="text-[15px] font-semibold tracking-[-0.01em] text-ink">Yuujin Circle</span>
             <span className="label hidden sm:inline">SNUC only</span>
           </div>
-          <a href="#signin" className="btn-ghost !h-9 !min-h-9 !px-3.5 !text-[12px]">
+          <a href="#signin" onClick={glideToSignIn} className="btn-ghost !h-9 !min-h-9 !px-3.5 !text-[12px]">
             Sign in <ArrowRight size={13} />
           </a>
         </Wrap>
@@ -176,7 +223,7 @@ export default function Landing() {
                 <p className="lead mt-5 max-w-[38ch] rise">
                   Three moves, in order, the same for everyone on campus.
                 </p>
-                <a href="#signin" className="btn-ghost mt-8 rise">
+                <a href="#signin" onClick={glideToSignIn} className="btn-ghost mt-8 rise">
                   {MAIN_ACTION} <ArrowRight size={14} />
                 </a>
               </div>
@@ -259,7 +306,7 @@ export default function Landing() {
                 </p>
               </div>
               <div className="lg:col-span-4 lg:col-start-9 lg:self-end rise">
-                <a href="#signin" className="btn-primary w-full !min-h-12">
+                <a href="#signin" onClick={glideToSignIn} className="btn-primary w-full !min-h-12">
                   {MAIN_ACTION} <ArrowRight size={15} />
                 </a>
                 <p className="label mt-3 flex items-center gap-1.5">
