@@ -178,6 +178,8 @@ body:has(.profile-editor),body:has(.auth-state) {background:#f2eee5;}
 }
 
 .chat-invitation-dice {display:block;flex:none;width:144px;height:116px;transform-origin:center;}
-.chat-invitation-dice-follow,.chat-invitation-dice .glass-dice {display:block;width:100%;height:100%;}
+.chat-invitation-dice .glass-dice {display:block;width:100%;height:100%;}
 .chat-invitation[aria-busy=true] {cursor:progress;}
 @media(max-width:360px) {.chat-invitation-dice {height:108px;}}
+
+.glass-die-exit,.glass-die-follow {display:block;width:100%;height:100%;transform-style:preserve-3d;}

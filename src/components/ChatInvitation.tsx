@@ -18,6 +18,11 @@ export function ChatInvitation({ to, detail }: { to: string; detail: string }) {
   const y = useMotionValue(0);
   const rotateX = useSpring(x, { stiffness: 320, damping: 30 });
   const rotateY = useSpring(y, { stiffness: 320, damping: 30 });
+  const rearX = useSpring(x, { stiffness: 170, damping: 24 });
+  const rearY = useSpring(y, { stiffness: 170, damping: 24 });
+  const backX = useTransform(rearY, value => -value * 1.1);
+  const backY = useTransform(rearX, value => value * 1.3);
+  const backRotate = useTransform(rearY, value => -value * 2);
   const diceX = useTransform(rotateY, value => value * 1.5);
   const diceY = useTransform(rotateX, value => -value * 1.5);
   const diceRotate = useTransform(rotateY, value => value * 1.5);
@@ -37,11 +42,13 @@ export function ChatInvitation({ to, detail }: { to: string; detail: string }) {
     entering.current = true;
     setOpening(true);
     reset();
-    await exit.start({
-      transform: 'translateY(-8px) scale(1.65)',
+    await exit.start((die: number) => ({
+      transform: die === 0
+        ? 'translate(-10px, -6px) scale(1.65) rotate(-8deg)'
+        : 'translate(12px, -18px) scale(1.45) rotate(12deg)',
       opacity: 0,
       transition: { duration: .28, ease: [.23, 1, .32, 1] },
-    });
+    }));
     if (mounted.current) navigate(to);
   }
 
@@ -60,13 +67,12 @@ export function ChatInvitation({ to, detail }: { to: string; detail: string }) {
       }}
       onPointerLeave={reset} onPointerCancel={reset} onBlur={reset}>
       <span className="chat-invitation-corner" aria-hidden="true"><ArrowUpRight size={20} /></span>
-      <motion.span className="chat-invitation-dice" animate={exit}
-        initial={{ transform: 'translateY(0px) scale(1)', opacity: 1 }} aria-hidden="true">
-        <motion.span className="chat-invitation-dice-follow"
-          style={reduced ? undefined : { x: diceX, y: diceY, rotate: diceRotate }}>
-          <GlassDice />
-        </motion.span>
-      </motion.span>
+      <span className="chat-invitation-dice" aria-hidden="true">
+        <GlassDice exitControls={exit} motionStyles={reduced ? undefined : [
+          { x: diceX, y: diceY, rotate: diceRotate },
+          { x: backX, y: backY, rotate: backRotate },
+        ]} />
+      </span>
       <span className="chat-invitation-copy">
         <span className="chat-invitation-title">Open the chat</span>
         <span className="chat-invitation-detail">{detail}</span>
