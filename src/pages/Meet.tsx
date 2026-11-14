@@ -1,3 +1,4 @@
+import { ChatInvitation } from '../components/ChatInvitation';
 import { CampusHeader } from '../components/CampusHeader';
 import { useCallback, useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
@@ -323,18 +324,9 @@ export default function Meet() {
                 ))}
               </ul>
 
-              <Link to={`/chat/${pairing.match.id}`} className="glass-chat mt-6">
-                <GlassDice />
-                <span className="glass-chat-copy">
-                  <span className="glass-chat-title">Open the chat</span>
-                  <span className="glass-chat-detail">
-                    {stage >= 5
-                      ? 'Match or Pass is open'
-                      : `${STAGE_THRESHOLDS[4] - pairing.count} more messages to decide`}
-                  </span>
-                </span>
-                <span className="glass-chat-arrow"><ArrowRight size={20} /></span>
-              </Link>
+              <ChatInvitation to={`/chat/${pairing.match.id}`}
+                detail={stage >= 5 ? 'Match or Pass is open'
+                  : `${STAGE_THRESHOLDS[4] - pairing.count} more messages to decide`} />
             </div>
           </motion.section>
         ) : (

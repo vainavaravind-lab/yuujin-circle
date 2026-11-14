@@ -138,3 +138,42 @@ body:has(.profile-editor),body:has(.auth-state) {background:#f2eee5;}
 .editor-form fieldset {min-width:0;}
 .editor-form .card > div:last-child {flex:1 1 200px;}
 .editor-form label.btn-ghost {max-width:100%;white-space:normal;}
+
+/* The pairing invitation is a centered, tactile square rather than a banner. */
+.chat-invitation-stage {display:flex;justify-content:center;padding:32px 0 8px;perspective:800px;}
+.chat-invitation {
+ position:relative;isolation:isolate;display:flex;flex-direction:column;align-items:center;justify-content:center;
+ width:264px;max-width:100%;aspect-ratio:1;padding:28px 20px;gap:24px;
+ border:1px solid #fff5;border-radius:20px;background:#30263b;color:#fff8ee;
+ box-shadow:inset 0 1px 0 #ffffff50,0 12px 28px -16px #251e3159;
+ text-align:center;text-decoration:none;touch-action:manipulation;
+ transition:background-color 160ms,border-color 160ms;
+}
+.chat-invitation::before {content:'';position:absolute;inset:8px;border:1px solid #ffffff12;border-radius:12px;pointer-events:none;}
+.chat-invitation-corner {position:absolute;top:20px;right:20px;color:#dce1a3;}
+.chat-invitation .glass-dice {flex:none;width:136px;height:104px;transform:none;}
+.chat-invitation .glass-die-float {animation:none;}
+.chat-invitation .glass-die-float--0 {left:24px;top:16px;}
+.chat-invitation .glass-die-float--1 {left:76px;top:48px;}
+.chat-invitation .glass-die {transition:transform 240ms var(--ease-out);}
+.chat-invitation-copy {display:grid;gap:8px;}
+.chat-invitation-title {font:400 34px/1.1 var(--font-display);letter-spacing:-.02em;}
+.chat-invitation-detail {font-size:12px;line-height:1.5;color:#d0c5db;max-width:25ch;}
+.chat-invitation:focus-visible {outline:3px solid #645079;outline-offset:6px;}
+.chat-invitation:active {background:#44344e;border-color:#ffffff90;}
+.chat-invitation:active .glass-die-float--0 .glass-die {transform:rotateX(-38deg) rotateY(-48deg) rotateZ(-4deg);}
+.chat-invitation:active .glass-die-float--1 .glass-die {transform:rotateX(-15deg) rotateY(48deg) rotateZ(6deg);}
+@media(hover:hover) and (pointer:fine) {
+ .chat-invitation:hover {background:#3a2d46;border-color:#ffffff80;}
+ .chat-invitation:hover .glass-die-float--0 .glass-die {transform:rotateX(-30deg) rotateY(-42deg) rotateZ(-8deg);}
+ .chat-invitation:hover .glass-die-float--1 .glass-die {transform:rotateX(-20deg) rotateY(40deg) rotateZ(12deg);}
+}
+@media(prefers-reduced-motion:reduce) {
+ .chat-invitation .glass-die {transition:none;}
+ .chat-invitation:hover .glass-die-float .glass-die,.chat-invitation:active .glass-die-float .glass-die {transform:rotateX(-24deg) rotateY(-32deg) rotateZ(-12deg);}
+}
+@media(max-width:360px) {
+ .chat-invitation {padding:20px 16px;gap:16px;}
+ .chat-invitation-title {font-size:28px;}
+ .chat-invitation .glass-dice {height:96px;}
+}
