@@ -6,7 +6,7 @@ import { supabase, isSupabaseConfigured } from '../lib/supabase';
 import { COLLEGE_DOMAIN } from '../lib/constants';
 import { useToast } from '../contexts/ToastContext';
 import { LogoMark } from '../components/Logo';
-import { TideLight, TideText } from '../components/Tide';
+import { TideText } from '../components/Tide';
 
 const MAIN_ACTION = 'Email me a sign-in link';
 
@@ -14,7 +14,7 @@ const STEPS = [
   {
     n: '01',
     title: 'Spend a spark',
-    body: 'Five a day, one back every twenty minutes. A spark puts you in a chat with one random classmate. Nobody picks anybody.',
+    body: 'Up to five sparks, with one returning every twenty minutes. A spark puts you in a chat with one random classmate. Nobody picks anybody.',
   },
   {
     n: '02',
@@ -31,7 +31,7 @@ const STEPS = [
 const SAFETY = [
   'Sign-in is a one-tap link to your college inbox. No password exists to leak.',
   'Every profile is tied to a verified @' + COLLEGE_DOMAIN + ' address.',
-  'Report or block removes someone from your campus in a single tap.',
+  'You can block a classmate and close a conversation.',
   'No public profiles, no follower counts, and nothing for a stranger to browse.',
 ];
 
@@ -81,10 +81,14 @@ export default function Landing() {
       window.removeEventListener('keydown', onKey);
       stopScroll.current = null;
     };
-    const controls = animate(start, top, {
+    const controls = animate(0, 1, {
       duration: Math.min(3.4, Math.max(1.2, Math.abs(top - start) / 2300)),
       ease: [.45, 0, .2, 1],
-      onUpdate: value => window.scrollTo(0, value),
+      onUpdate: progress => {
+        // Font loading and responsive layout can move the form during a long glide.
+        const target = Math.max(0, destination.getBoundingClientRect().top + window.scrollY - 112);
+        window.scrollTo(0, start + (target - start) * progress);
+      },
       onComplete: () => { cleanup(); finish(); },
     });
     stopScroll.current = cancel;

@@ -39,7 +39,7 @@ The isolated prototype is design-review.html (development only, not part of the 
 - 200% root text sizing at 390px: all six screens passed after fixing the photo chooser wrapping.
 - Confirm dialog: focus inside modal; Escape dismisses.
 - Empty/blocked campus states: passed.
-- Sign-in navigation: gradual travel and correct focus/destination on desktop and phone widths.
+- Sign-in navigation: gradual travel and correct focus/destination on desktop and phone widths. A final rerun caught font/layout movement during the glide; the destination is now recalculated each animation frame. The check also passes with a deliberate 72px layout shift after clicking.
 - Mock sign-in success, missing-link recovery, all three prototype variants and worst-case toggle: passed.
 - No physical phone test or real-user login/send/upload performed.
 
