@@ -59,10 +59,9 @@ export default function Profile() {
 
   return (
     <div className="campus-page campus-profile pb-4">
-      <CampusHeader label="The person behind the conversation" title="Entirely," accent="you." mark="yc.">
+      <CampusHeader label="Profile" title="Your campus" accent="profile">
         <p className="lead mt-3 max-w-[46ch]">
-          What a classmate sees once the meter has filled: the three answers, the interests, and the
-          course your @{COLLEGE_DOMAIN} address proved.
+          Your photo, interests and details appear gradually as a conversation grows.
         </p>
             </CampusHeader>
 
@@ -119,7 +118,7 @@ export default function Profile() {
       {/* ---------------- prompts ---------------- */}
       {profile.prompts?.length > 0 && (
         <section className="mt-12 rise">
-          <h2 className="display-3 text-ink">In their words</h2>
+          <h2 className="display-3 text-ink">Your answers</h2>
           <dl className="mt-4 border-t border-white/[0.08]">
             {profile.prompts.map((p, i) => (
               <div key={i} className="border-b border-white/[0.08] py-4">
@@ -147,8 +146,8 @@ export default function Profile() {
             {
               key: 'edit',
               icon: Pencil,
-              label: 'Edit profile and prompts',
-              note: 'Bio, interests, the three answers.',
+              label: 'Edit profile',
+              note: 'Photo, bio, interests and campus details.',
             },
             {
               key: 'safety',

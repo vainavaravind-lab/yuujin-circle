@@ -46,7 +46,7 @@ export default function League() {
 
   return (
     <div className="campus-page campus-league pb-4">
-      <CampusHeader label="Small moments add up" title="Find your" accent="momentum." mark="✦">
+      <CampusHeader label="League" title="Around" accent="campus">
         <p className="lead mt-3 max-w-[46ch]">
           The campus top fifty. XP comes from showing up: a chat kept alive, a question answered, a
           draw taken.
@@ -80,9 +80,9 @@ export default function League() {
           <div className="h-[3px] w-full bg-white/10">
             <motion.div
               initial={false}
-              animate={{ width: `${Math.max(2, progress * 100)}%` }}
-              transition={{ duration: 0.9, ease: EASE }}
-              className="h-full bg-teal-brand"
+              animate={{ scaleX: Math.max(0, Math.min(1, progress)) }}
+              transition={{ duration: 0.24, ease: EASE }}
+              className="h-full origin-left bg-teal-brand"
             />
           </div>
           <div className="mt-3 flex flex-wrap justify-between gap-x-4 gap-y-1">
@@ -132,7 +132,7 @@ export default function League() {
 
       {/* ---------------- the rest ---------------- */}
       <section className="mt-10">
-        <h2 className="display-3 text-ink">Everyone else</h2>
+        <h2 className="display-3 text-ink">Campus standings</h2>
         <ul className="mt-4 border-t border-white/[0.08]">
           {loading &&
             [...Array(5)].map((_, i) => (

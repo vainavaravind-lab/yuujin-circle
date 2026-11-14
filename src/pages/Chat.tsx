@@ -302,7 +302,7 @@ export default function Chat() {
           <p role="alert" className="py-10 text-center text-sm text-ink-soft">{loadError}</p>
         ) : messages.length === 0 ? (
           <div className="mx-auto mt-10 max-w-[34ch] text-center">
-            <p className="display-3 text-ink">Nobody has spoken yet.</p>
+            <p className="display-3 text-ink">Start the conversation</p>
             <p className="mt-2 text-[13px] leading-[1.6] text-ink-soft">
               Say something first. Each message lights one more part of the meter.
             </p>
@@ -325,7 +325,7 @@ export default function Chat() {
                         : 'rounded-bl-md bg-white/[0.05] text-ink'
                     }`}
                   >
-                    <p className="whitespace-pre-wrap break-words text-[14px] leading-[1.5]">
+                    <p dir="auto" className="whitespace-pre-wrap break-words text-[14px] leading-[1.5]">
                       {msg.content}
                     </p>
                     <p className="mt-1 text-[10px] tabular-nums text-ink-faint">
@@ -342,7 +342,7 @@ export default function Chat() {
       {!loading && !loadError && !blocked && <div className="live-chat-spark">
         <div><span className="label">Spark meter</span><span className="label">{messages.length} / 38</span></div>
         <SparkMeter count={messages.length} />
-        <p>{stage < 5 ? 'A little more conversation. A little less mystery.' : 'All five reveal milestones reached.'}</p>
+        <p>{stage < 5 ? 'Your identity reveals gradually as you exchange messages.' : 'All five reveal milestones reached.'}</p>
       </div>}
 
       {blocked ? (

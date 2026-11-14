@@ -55,8 +55,8 @@ export default function AuthCallback() {
 
   if (error) {
     return (
-      <div className="flex min-h-dvh items-center justify-center bg-cream px-4">
-        <div className="w-full max-w-md border border-white/10 bg-cream-100 p-8">
+      <div className="auth-state campus-page">
+        <div className="auth-state-card">
           <CircleAlert size={24} className="text-rose-brand" />
           <h1 className="display-2 mt-5 text-ink">Sign-in did not finish</h1>
           <p className="mt-3 text-[15px] leading-[1.6] text-ink-soft">

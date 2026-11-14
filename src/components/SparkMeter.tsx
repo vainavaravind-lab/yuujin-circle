@@ -1,4 +1,4 @@
-import { motion } from 'framer-motion';
+import { motion, useReducedMotion } from 'framer-motion';
 import { Flame } from 'lucide-react';
 import { SPARK_MAX_STAGE, STAGE_THRESHOLDS, sparkStageFromCount } from '../lib/gamification';
 
@@ -7,9 +7,10 @@ import { SPARK_MAX_STAGE, STAGE_THRESHOLDS, sparkStageFromCount } from '../lib/g
  * tick at each of the five reveal thresholds. Rose belongs to the spark itself.
  */
 export function SparkMeter({ count, className = '' }: { count: number; className?: string }) {
+  const reduced = useReducedMotion();
   const { stage, messagesToNext } = sparkStageFromCount(count);
   const goal = STAGE_THRESHOLDS[SPARK_MAX_STAGE - 1];
-  const pct = Math.min(100, (count / goal) * 100);
+  const pct = Math.max(0, Math.min(100, (count / goal) * 100));
 
   return (
     <div className={`flex items-center gap-3 ${className}`}>
@@ -22,9 +23,9 @@ export function SparkMeter({ count, className = '' }: { count: number; className
       <div className="relative h-[3px] flex-1 bg-white/[0.12]">
         <motion.div
           initial={false}
-          animate={{ width: `${pct}%` }}
-          transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-          className="absolute inset-y-0 left-0 bg-teal-brand"
+          animate={{ scaleX: pct / 100 }}
+          transition={{ duration: reduced ? 0 : 0.24, ease: [0.16, 1, 0.3, 1] }}
+          className="absolute inset-0 origin-left bg-teal-brand"
         />
         {STAGE_THRESHOLDS.map((t) => (
           <span

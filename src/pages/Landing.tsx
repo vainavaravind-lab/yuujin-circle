@@ -131,7 +131,7 @@ export default function Landing() {
     <>
       {/* ---------------- nav ---------------- */}
       <header className="fixed inset-x-0 top-0 z-50 border-b border-white/[0.08] bg-cream/92 backdrop-blur-sm">
-        <Wrap className="flex h-[var(--nav)] items-center justify-between">
+        <Wrap className="flex h-[var(--nav)] items-center justify-between"><a href="#landing-content" className="skip-link">Skip to content</a>
           <div className="flex items-baseline gap-3">
             <LogoMark size={22} />
             <span className="text-[15px] font-semibold tracking-[-0.01em] text-ink">Yuujin Circle</span>
@@ -146,8 +146,8 @@ export default function Landing() {
         </div>
       </header>
 
-      <main className="landing">
-        <TideLight />
+      <main id="landing-content" tabIndex={-1} className="landing">
+        
         {/* ---------------- hero ---------------- */}
         <section className="landing-hero">
           <Wrap className="landing-hero-grid">
@@ -160,12 +160,12 @@ export default function Landing() {
               </p></TideText>
               <div id="signin" className="mt-9 max-w-md scroll-mt-28">
                 {sent ? (
-                  <div className="border border-teal-brand/30 bg-teal-mist px-5 py-4" style={{ borderRadius: 12 }}>
+                  <div role="status" className="signin-success border border-teal-brand/30 bg-teal-mist px-5 py-4" style={{ borderRadius: 12 }}>
                     <p className="flex items-center gap-2 text-[14px] font-semibold text-teal-deep">
                       <Mail size={15} /> Link sent to {sentTo}
                     </p>
                     <p className="mt-1.5 text-[13px] leading-[1.6] text-ink-soft">
-                      It works once and expires in an hour. Open it on this device.
+                      Open the link on this device to finish signing in. If it expires, request a new one.
                     </p>
                     <button
                       type="button"
@@ -288,7 +288,7 @@ export default function Landing() {
                 ))}
               </div>
               <p className="mt-4 text-[13px] leading-[1.6] text-ink-soft">
-                One link, one hour, one device. There is nothing to remember and nothing to reuse.
+                Open the link from your college inbox on the same device where you requested it.
               </p>
             </div>
           </Wrap>
@@ -301,8 +301,7 @@ export default function Landing() {
               <div className="lg:col-span-7">
                 <TideText><h2 className="display-1 max-w-[20ch] rise">Take a draw before the term ends</h2></TideText>
                 <p className="lead mt-5 max-w-[42ch] rise">
-                  Five sparks are already waiting. One of them is the person you have walked past all
-                  semester.
+                  Start with five sparks. Each spark starts a conversation with another student on campus.
                 </p>
               </div>
               <div className="lg:col-span-4 lg:col-start-9 lg:self-end rise">

@@ -4,10 +4,10 @@ import { CODE_SNIPPET_ENV } from '../lib/setupSteps';
 
 export function SetupRequired() {
   return (
-    <div className="flex min-h-dvh items-center justify-center bg-cream px-4 py-10">
-      <div className="card w-full max-w-lg p-8">
+    <div className="auth-state campus-page">
+      <div className="auth-state-card">
         <Logo size={44} />
-        <h1 className="mt-5 text-2xl font-extrabold tracking-tight text-ink">One quick setup step</h1>
+        <h1 className="display-2 mt-5 text-ink">One quick setup step</h1>
         <p className="mt-2 text-[15px] leading-relaxed text-ink-soft">
           Yuujin Circle is installed, but it isn't connected to a Supabase project yet. Follow
           <strong className="text-ink"> SETUP.md</strong> in the project root — it takes about 5 minutes.

@@ -1,5 +1,14 @@
 # Handoff — Yuujin Circle (SNUC Campus Dating)
 
+## Current frontend update — 2026-11-14
+
+The whole-site design pass is recorded in DESIGN-REVIEW.md. Shared finishing styles live in
+src/craft.css; onboarding, loading, auth errors, native confirmations and Sonner notifications
+now match the campus pages. The scroll conversation and slow sign-in navigation remain.
+See the review for verification coverage and the design checker's browser-launch limitation.
+No database changes were made in this pass. The older handoff below is historical.
+
+
 This handoff records the state before the design and profile-photo update. For the
 new avatar storage and the rollout steps, see **SETUP.md**.
 
@@ -166,4 +175,3 @@ Not verified / caveats:
   (`CartoonAvatar`, `lib/cartoon.ts`).
 - Anything touching blocks should read through `my_blocks()`, never a direct `blocks` select.
 - Verify with `npx tsc -b --pretty false` and `npm run build`; there is no test suite.
-

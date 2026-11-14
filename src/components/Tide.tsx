@@ -10,8 +10,7 @@ export function TideText({ children }: { children: ReactNode }) {
   const y = useTransform(flow, [0, .2, .72, 1], [22, 0, 0, -38]);
   const x = useTransform(flow, [0, .2, .72, 1], [-8, 0, 0, 12]);
   const opacity = useTransform(flow, [0, .18, .72, 1], [.25, 1, 1, 0]);
-  const filter = useTransform(flow, [0, .2, .75, 1], ['blur(3px)', 'blur(0px)', 'blur(0px)', 'blur(7px)']);
-  return <div ref={ref} className="tide-text-anchor"><motion.div style={reduced ? undefined : { x, y, opacity, filter }}>{children}</motion.div></div>;
+  return <div ref={ref} className="tide-text-anchor"><motion.div style={reduced ? undefined : { x, y, opacity }}>{children}</motion.div></div>;
 }
 
 export function TideLight() {

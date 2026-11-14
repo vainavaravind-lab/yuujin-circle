@@ -1,7 +1,7 @@
-import { useEffect, useRef } from 'react';
+import { useEffect } from 'react';
 import { NavLink, Outlet, useLocation } from 'react-router-dom';
 import { Dices, HeartHandshake, Trophy, UserRound } from 'lucide-react';
-import { AnimatePresence, motion } from 'framer-motion';
+
 import { LogoMark } from './Logo';
 import { PresenceProvider } from '../contexts/PresenceContext';
 
@@ -12,25 +12,9 @@ const TABS = [
   { to: '/profile', label: 'Profile', icon: UserRound, note: 'What your campus sees' },
 ];
 
-function routeDepth(pathname: string): number {
-  if (pathname.startsWith('/meet')) return 0;
-  if (pathname.startsWith('/friends')) return 1;
-  if (pathname.startsWith('/league')) return 2;
-  if (pathname.startsWith('/profile')) return 3;
-  return 0;
-}
-
 export function AppShell() {
   const location = useLocation();
   const current = TABS.find((t) => location.pathname.startsWith(t.to)) ?? TABS[0];
-
-  const dirRef = useRef(1);
-  const lastPathRef = useRef(location.pathname);
-  if (lastPathRef.current !== location.pathname) {
-    dirRef.current = routeDepth(location.pathname) >= routeDepth(lastPathRef.current) ? 1 : -1;
-    lastPathRef.current = location.pathname;
-  }
-  const dir = dirRef.current;
 
   useEffect(() => {
     window.scrollTo({ top: 0 });
@@ -42,6 +26,7 @@ export function AppShell() {
         <header
           className="sticky top-0 z-40 border-b border-white/[0.08] bg-cream/95 backdrop-blur-sm"
         >
+          <a className="skip-link" href="#campus-content">Skip to content</a>
           <div className="wrap flex h-[var(--nav)] items-center justify-between gap-4">
             <span className="flex items-center gap-2.5">
               <LogoMark size={24} />
@@ -69,19 +54,8 @@ export function AppShell() {
           </span>
         </header>
 
-        <main className="wrap relative z-10 flex-1 pb-[calc(var(--bar)+2rem)] pt-6">
-          <AnimatePresence mode="wait" initial={false} custom={dir}>
-            <motion.div
-              key={location.pathname}
-              custom={dir}
-              initial={{ opacity: 0, y: dir >= 0 ? 8 : -8 }}
-              animate={{ opacity: 1, y: 0, transition: { duration: 0.2, ease: [0.2, 0.7, 0.2, 1] } }}
-              exit={{ opacity: 0, transition: { duration: 0.12, ease: 'easeIn' } }}
-              className="w-full"
-            >
-              <Outlet />
-            </motion.div>
-          </AnimatePresence>
+        <main id="campus-content" tabIndex={-1} className="wrap relative z-10 flex-1 pb-[calc(var(--bar)+2rem)] pt-6">
+          <Outlet />
         </main>
 
         <nav aria-label="Campus navigation"
@@ -97,11 +71,7 @@ export function AppShell() {
                 {({ isActive }) => (
                   <>
                     {isActive && (
-                      <motion.span
-                        layoutId="tab-rule"
-                        className="absolute inset-x-3 top-0 h-[2px] bg-teal-brand"
-                        transition={{ type: 'spring', stiffness: 480, damping: 34 }}
-                      />
+                      <span className="absolute inset-x-3 top-0 h-[2px] bg-teal-brand" />
                     )}
 
                     <Icon
@@ -120,4 +90,3 @@ export function AppShell() {
     </PresenceProvider>
   );
 }
-

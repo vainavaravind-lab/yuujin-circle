@@ -78,7 +78,7 @@ export function ScrollChat({ story }: { story: RefObject<HTMLDivElement> }) {
           <div className="scroll-chat-meter">
             <div><span><Flame size={13} /> Spark meter</span><span>{current.count} / 38</span></div>
             <div role="progressbar" aria-label="Example conversation progress" aria-valuemin={0} aria-valuemax={38} aria-valuenow={current.count} className="scroll-chat-track">
-              <span style={{ width: `${current.count / 38 * 100}%` }} />
+              <span style={{ width: "100%", transform: `scaleX(${Math.min(1, current.count / 38)})` }} />
             </div>
             <p>{step >= 5 ? <><Heart size={12} /> Match or Pass unlocked</> : `Stage ${stage} of 5 · ${[3, 8, 16, 26, 38][stage] - current.count} messages to next reveal`}</p>
           </div>

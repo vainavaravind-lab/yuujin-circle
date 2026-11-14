@@ -1,12 +1,8 @@
 import { LogoMark } from './Logo';
-
-export function Splash({ label = 'Warming things up…' }: { label?: string }) {
-  return (
-    <div className="flex min-h-dvh flex-col items-center justify-center gap-4 bg-cream">
-      <div className="animate-float">
-        <LogoMark size={56} />
-      </div>
-      <p className="text-sm font-semibold text-ink-faint">{label}</p>
-    </div>
-  );
+export function Splash({ label = 'Opening Yuujin Circle…' }: { label?: string }) {
+  return <main className="splash-screen" role="status" aria-live="polite" aria-busy="true">
+    <div className="splash-brand"><LogoMark size={32} /><span>Yuujin Circle</span></div>
+    <div className="splash-content"><span className="splash-ring" aria-hidden="true" /><p>{label}</p></div>
+    <p className="splash-campus">Shiv Nadar University Chennai</p>
+  </main>;
 }

@@ -249,7 +249,7 @@ export default function Friends() {
 
   return (
     <div className="campus-page campus-friends pb-4">
-      <CampusHeader label="Your campus, a little closer" title="Strangers once." accent="Your circle now." mark="↔">
+      <CampusHeader label="Friends" title="Your" accent="circle">
         <p className="lead mt-3 max-w-[46ch]">
           A pairing becomes a friendship when you both ask for it. Until then it sits here, open.
         </p>

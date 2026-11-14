@@ -238,7 +238,7 @@ export default function Meet() {
 
   return (
     <div className="campus-page campus-meet pb-4">
-      <CampusHeader label="One spark. One classmate." title="Meet someone" accent="unexpected." mark="✳">
+      <CampusHeader label="Meet" title="Your next" accent="conversation">
         <p className="lead mt-3 max-w-[46ch]">
           One spark puts you in a chat with a classmate you have never spoken to. Neither of you sees
           who the other is until the conversation earns it.
@@ -258,7 +258,7 @@ export default function Meet() {
           <p className="mt-1 text-[13px] text-ink-soft">
             {nextSparkMs !== null
               ? `Next spark in ${fmtCountdown(nextSparkMs)} · one every ${SPARK_REGEN_MINUTES} min`
-              : 'Full. Spending one pairs you immediately.'}
+              : 'Five sparks ready. Spend one to find a pairing.'}
           </p>
         </div>
 

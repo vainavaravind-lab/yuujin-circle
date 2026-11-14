@@ -34,8 +34,8 @@ export default function Verify() {
 
   if (status === 'error') {
     return (
-      <div className="flex min-h-dvh items-center justify-center bg-cream px-4">
-        <div className="w-full max-w-md border border-white/10 bg-cream-100 p-8">
+      <div className="auth-state campus-page">
+        <div className="auth-state-card">
           <Link2 size={24} className="text-ink-soft" />
           <h1 className="display-2 mt-5 text-ink">That link is spent</h1>
           <p className="mt-3 text-[15px] leading-[1.6] text-ink-soft">

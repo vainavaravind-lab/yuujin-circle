@@ -88,16 +88,20 @@ function ProfileEditor({ profile }: { profile: Profile }) {
   }
 
   return (
-    <main className="wrap profile-editor">
+    <main className="profile-editor campus-page">
+      <div className="editor-intro"><Link to={editing ? "/profile" : "/"} className="editor-brand">Yuujin Circle</Link>
       {editing && <Link to="/profile" className="link text-sm">Back to profile</Link>}
-      <h1 className="display-1 mt-3">{editing ? 'Edit profile' : 'Make yourself at home.'}</h1>
-      <form onSubmit={save} className="mt-7">
+      <h1 className="display-1 mt-3">{editing ? 'Edit profile' : 'Your campus profile'}</h1>
+      <p className="editor-note">{editing ? "Keep your details up to date. Changes appear in your existing conversations." : "Start with a few details. Your identity is revealed gradually as you chat."}</p>
+      <ol className="editor-reveals"><li><span>3</span> messages reveal interests</li><li><span>8</span> reveal your photo</li><li><span>16</span> reveal your name</li></ol>
+      </div>
+      <form onSubmit={save} className="editor-form">
         <fieldset disabled={saving} className="space-y-6">
           <div className="card flex flex-wrap items-center gap-5 p-5">
             <ProfilePhoto path={removePhoto ? null : profile.profile_photo_path} preview={photo?.url}
               className="size-24" />
             <div className="min-w-0 flex-1">
-              <h2 className="font-semibold">Profile photo</h2>
+              <h2 className="font-semibold">A face to the conversation</h2>
               <p className="mb-3 text-sm text-ink-soft">Optional. Your classmate can see it after eight messages.</p>
               <div className="flex flex-wrap items-center gap-3">
                 <label className="btn-ghost relative cursor-pointer focus-within:outline focus-within:outline-offset-2">
@@ -138,12 +142,12 @@ function ProfileEditor({ profile }: { profile: Profile }) {
               {LOOKING_FOR_OPTIONS.map((item) => <option key={item.value} value={item.value}>{item.label}</option>)}
             </select>
           </label>
-          <label className="grid gap-2 text-sm">Bio <span className="sr-only">(optional)</span>
-            <textarea className="input !h-auto py-3" rows={3} maxLength={300} value={bio}
+          <label className="grid gap-2 text-sm">About you <span className="sr-only">(optional)</span>
+            <textarea placeholder="A favourite campus spot, a weekend plan, or something you could talk about for hours" className="input !h-auto py-3" rows={3} maxLength={300} value={bio}
               onChange={(e) => setBio(e.target.value)} />
           </label>
           <fieldset>
-            <legend className="text-sm">Interests <span className="text-ink-soft">· Choose 1–8</span></legend>
+            <legend className="text-sm">Interests <span className="text-ink-soft">· {interests.length}/8 selected</span></legend>
             <div className="mt-3 flex flex-wrap gap-2">
               {[...new Set([...INTEREST_TAGS, ...profile.interests])].map((interest) => {
                 const selected = interests.includes(interest);
@@ -167,4 +171,3 @@ function ProfileEditor({ profile }: { profile: Profile }) {
     </main>
   );
 }
-
