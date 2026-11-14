@@ -300,6 +300,10 @@ export default function Meet() {
             </div>
 
             <div className="p-6">
+              <ChatInvitation to={`/chat/${pairing.match.id}`}
+                detail={stage >= 5 ? 'Match or Pass is open'
+                  : `${STAGE_THRESHOLDS[4] - pairing.count} more messages to decide`} />
+
               <SparkMeter count={pairing.count} />
 
               <ul className="mt-6 border-t border-white/[0.08]">
@@ -324,9 +328,7 @@ export default function Meet() {
                 ))}
               </ul>
 
-              <ChatInvitation to={`/chat/${pairing.match.id}`}
-                detail={stage >= 5 ? 'Match or Pass is open'
-                  : `${STAGE_THRESHOLDS[4] - pairing.count} more messages to decide`} />
+
             </div>
           </motion.section>
         ) : (
