@@ -5,7 +5,7 @@
  *  - cache-first for built static assets (hashed filenames) & fonts
  *  - NEVER cache Supabase storage images (profile photos change)
  */
-const VERSION = 'yuujin-v1'; /* bump also clears old caches */
+const VERSION = 'yuujin-v2-logo'; /* bump also clears old caches */
 const ASSET_CACHE = `${VERSION}-assets`;
 const PAGE_CACHE = `${VERSION}-pages`;
 
